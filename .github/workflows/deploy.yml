@@ -5,21 +5,25 @@ on:
     branches: [main]
 
 jobs:
-  build-and-deploy:
+  deploy:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write # GitHub Pages 배포에 필요한 권한
+
     steps:
-      - uses: actions/checkout@v3
-      - uses: pnpm/action-setup@v2
-        with:
-          version: 8 # pnpm 버전 (최신 버전 사용 추천)
-      - uses: actions/setup-node@v3
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
         with:
           node-version: "18"
-          cache: "pnpm"
+
+      - name: Install Dependencies
+        run: npm install
+
       - name: Build
-        run: |
-          pnpm install
-          pnpm build
+        run: npm run build
         env:
           CI: false
           NODE_ENV: production
@@ -27,10 +31,7 @@ jobs:
       - name: Prepare for deployment
         run: |
           touch ./dist/.nojekyll
-          # index.html을 루트에 복사
           cp ./dist/index.html ./dist/404.html
-          # 배포 전 파일 구조 확인
-          ls -la ./dist
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
