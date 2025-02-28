@@ -7,36 +7,18 @@ on:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write # GitHub Pages 배포에 필요한 권한 추가
-
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v2
+      - uses: actions/checkout@v3
+      - uses: pnpm/action-setup@v2
         with:
-          version: 8
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
+          version: 8 # pnpm 버전 (최신 버전 사용 추천)
+      - uses: actions/setup-node@v3
         with:
           node-version: "18"
           cache: "pnpm"
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-
-      - name: Build
-        run: pnpm build
-        env:
-          CI: false # 경고를 에러로 처리하지 않도록 설정
-
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build
+      - uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./dist
-          commit_message: "Deploy: ${{ github.event.head_commit.message }}"
-          enable_jekyll: false
