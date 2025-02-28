@@ -11,5 +11,19 @@ export default defineConfig({
     outDir: "dist", // 빌드 출력 디렉토리
     assetsDir: "assets",
     emptyOutDir: true,
+    rollupOptions: {
+      output: {
+        // MIME 타입 관련 설정
+        entryFileNames: "assets/[name].js",
+        chunkFileNames: "assets/[name].js",
+        assetFileNames: "assets/[name].[ext]",
+      },
+    },
+  },
+  // MIME 타입 헤더 설정
+  optimizeDeps: {
+    esbuildOptions: {
+      target: "es2020",
+    },
   },
 });

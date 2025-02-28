@@ -58,6 +58,9 @@ jobs:
         run: |
           touch dist/.nojekyll
           cp dist/index.html dist/404.html
+          # MIME 타입 설정을 위한 헤더 파일 생성
+          echo '/*' > dist/_headers
+          echo '  Content-Type: application/javascript' >> dist/_headers
 
       - name: Upload production-ready build files
         uses: actions/upload-artifact@v4
