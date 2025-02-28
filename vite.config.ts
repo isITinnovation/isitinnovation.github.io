@@ -3,7 +3,7 @@ import react from "@vitejs/plugin-react";
 
 export default defineConfig({
   plugins: [react()],
-  base: "./", // 상대 경로로 변경
+  base: "/isITinnovation/",
   server: {
     port: 3000,
   },
