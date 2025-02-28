@@ -35,11 +35,7 @@ jobs:
         run: |
           pnpm build
         env:
-          CI: false
-          NODE_ENV: production
-
-      - name: Create .nojekyll file
-        run: touch ./dist/.nojekyll # Jekyll 처리 방지
+          CI: false # 경고를 에러로 처리하지 않도록 설정
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
