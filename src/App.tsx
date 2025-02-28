@@ -31,7 +31,7 @@ const theme = createTheme({
 const App = () => {
   return (
     <ThemeProvider theme={theme}>
-      <BrowserRouter>
+      <BrowserRouter basename="/">
         <Box
           sx={{
             minHeight: "100vh",
