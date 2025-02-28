@@ -16,9 +16,25 @@ jobs:
         with:
           node-version: "18"
           cache: "pnpm"
-      - run: pnpm install --frozen-lockfile
-      - run: pnpm build
-      - uses: peaceiris/actions-gh-pages@v3
+      - name: Build
+        run: |
+          pnpm install
+          pnpm build
+        env:
+          CI: false
+          NODE_ENV: production
+
+      - name: Prepare for deployment
+        run: |
+          touch ./dist/.nojekyll
+          # index.html을 루트에 복사
+          cp ./dist/index.html ./dist/404.html
+          # 배포 전 파일 구조 확인
+          ls -la ./dist
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./dist
+          enable_jekyll: false
