@@ -3,7 +3,7 @@ import react from "@vitejs/plugin-react";
 
 export default defineConfig({
   plugins: [react()],
-  base: "/isitBlog/", // 저장소 이름
+  base: "/isITinnovation/", // isitBlog에서 isITinnovation으로 수정
   server: {
     port: 3000,
   },
@@ -14,9 +14,9 @@ export default defineConfig({
     rollupOptions: {
       output: {
         // MIME 타입 관련 설정
-        entryFileNames: "assets/[name].js",
-        chunkFileNames: "assets/[name].js",
-        assetFileNames: "assets/[name].[ext]",
+        entryFileNames: `assets/[name].[hash].js`,
+        chunkFileNames: `assets/[name].[hash].js`,
+        assetFileNames: `assets/[name].[hash].[ext]`,
       },
     },
   },
