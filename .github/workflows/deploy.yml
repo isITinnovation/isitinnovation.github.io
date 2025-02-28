@@ -5,6 +5,11 @@ on:
     branches:
       - main
 
+# 동시 배포 방지 설정
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
 jobs:
   build:
     name: Build
@@ -44,6 +49,9 @@ jobs:
 
       - name: Build project
         run: pnpm build
+        env:
+          CI: false
+          NODE_ENV: production
 
       - name: Upload production-ready build files
         uses: actions/upload-artifact@v4
@@ -71,3 +79,4 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./dist
+          force_orphan: true # 깨끗한 배포를 위한 설정
