@@ -17,15 +17,6 @@ import CodeIcon from "@mui/icons-material/Code";
 import LinkIcon from "@mui/icons-material/Link";
 import ImageIcon from "@mui/icons-material/Image";
 import CloseIcon from "@mui/icons-material/Close";
-import {
-  EditorContainer,
-  EditorWrapper,
-  TextArea,
-  PreviewContainer,
-  ToolBar,
-  TagInput,
-  Tag,
-} from "./styles";
 
 const BlogEditor = () => {
   const [title, setTitle] = useState("");

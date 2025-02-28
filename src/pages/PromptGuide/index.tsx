@@ -1,4 +1,3 @@
-import React from "react";
 import {
   Container,
   Typography,
@@ -12,7 +11,6 @@ import {
   TextField,
   InputAdornment,
 } from "@mui/material";
-import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
 import SearchIcon from "@mui/icons-material/Search";
 import StarIcon from "@mui/icons-material/Star";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";

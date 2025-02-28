@@ -1,4 +1,3 @@
-import React from "react";
 import {
   Container,
   Typography,
@@ -8,7 +7,6 @@ import {
   Card,
   CardContent,
   Chip,
-  IconButton,
   Button,
 } from "@mui/material";
 import TrendingUpIcon from "@mui/icons-material/TrendingUp";
