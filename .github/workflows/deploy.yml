@@ -8,17 +8,16 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     permissions:
-      contents: write # GitHub Pages 배포에 필요한 권한
+      contents: write # GitHub Pages 배포에 필요한 권한 추가
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Install pnpm
+      - name: Setup pnpm
         uses: pnpm/action-setup@v2
         with:
           version: 8
-          run_install: false # 아직 install 하지 않음
 
       - name: Setup Node.js
         uses: actions/setup-node@v3
@@ -27,13 +26,10 @@ jobs:
           cache: "pnpm"
 
       - name: Install dependencies
-        run: |
-          pnpm install --no-frozen-lockfile
-          pnpm install  # 의존성 설치 확실히 하기
+        run: pnpm install --frozen-lockfile
 
       - name: Build
-        run: |
-          pnpm build
+        run: pnpm build
         env:
           CI: false # 경고를 에러로 처리하지 않도록 설정
 
@@ -42,4 +38,5 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./dist
+          commit_message: "Deploy: ${{ github.event.head_commit.message }}"
           enable_jekyll: false
