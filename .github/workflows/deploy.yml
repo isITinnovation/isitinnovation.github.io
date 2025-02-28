@@ -14,10 +14,21 @@ jobs:
   build:
     name: Build
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
 
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
+
+      # pnpm 캐시 설정
+      - name: Cache pnpm modules
+        uses: actions/cache@v3
+        with:
+          path: ~/.pnpm-store
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v2
@@ -31,27 +42,22 @@ jobs:
           node-version: "20"
           cache: "pnpm"
 
-      - name: Get pnpm store directory
-        shell: bash
-        run: |
-          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
-
-      - name: Setup pnpm cache
-        uses: actions/cache@v3
-        with:
-          path: ${{ env.STORE_PATH }}
-          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-pnpm-store-
-
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: |
+          pnpm install --no-frozen-lockfile
+          pnpm store path
 
       - name: Build project
         run: pnpm build
         env:
           CI: false
           NODE_ENV: production
+          BASE_URL: /isitBlog/
+
+      - name: Prepare build
+        run: |
+          touch dist/.nojekyll
+          cp dist/index.html dist/404.html
 
       - name: Upload production-ready build files
         uses: actions/upload-artifact@v4
@@ -79,4 +85,6 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./dist
-          force_orphan: true # 깨끗한 배포를 위한 설정
+          force_orphan: true
+          enable_jekyll: false
+          commit_message: "Deploy: ${{ github.event.head_commit.message }}"
