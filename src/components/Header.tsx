@@ -21,6 +21,33 @@ const Header = () => {
   const navigate = useNavigate();
   const [searchValue, setSearchValue] = useState("");
 
+  // XSS 방어를 위한 입력값 검증 함수
+  const sanitizeInput = (input: string): string => {
+    // 특수문자만 필터링하는 정규식으로 변경
+    const specialChars = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>/?~]/g;
+    let sanitized = input.replace(specialChars, "");
+
+    // HTML 태그 제거
+    sanitized = sanitized.replace(/<[^>]*>/g, "");
+
+    // 위험한 문자열 이스케이프 처리
+    sanitized = sanitized
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#x27;")
+      .replace(/\\/g, "&#x5C;")
+      .replace(/`/g, "&#96;");
+
+    return sanitized;
+  };
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const sanitizedValue = sanitizeInput(e.target.value);
+    setSearchValue(sanitizedValue);
+  };
+
   return (
     <AppBar
       position="fixed"
@@ -71,7 +98,7 @@ const Header = () => {
               sx={{ ml: 2, flex: 1 }}
               placeholder="검색어를 입력해주세요"
               value={searchValue}
-              onChange={(e) => setSearchValue(e.target.value)}
+              onChange={handleSearchChange}
             />
             <IconButton sx={{ p: "10px", color: "primary.main" }}>
               <SearchIcon />

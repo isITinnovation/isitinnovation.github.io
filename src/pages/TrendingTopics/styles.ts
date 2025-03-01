@@ -36,3 +36,11 @@ export const Tag = styled.span`
   border-radius: 16px;
   font-size: 0.875rem;
 `;
+
+export const TrendingHeader = styled(Paper)`
+  background: linear-gradient(45deg, #03c75a 30%, #1ee177 90%);
+  color: white;
+  padding: ${({ theme }) => theme.spacing(4)};
+  margin-bottom: ${({ theme }) => theme.spacing(4)};
+  border-radius: ${({ theme }) => theme.spacing(3)};
+`;

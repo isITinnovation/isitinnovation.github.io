@@ -57,3 +57,11 @@ export const TipBox = styled.div`
   margin: 1rem 0;
   border: 1px solid ${theme.palette.primary.main};
 `;
+
+export const PromptHeader = styled(Paper)`
+  background: linear-gradient(45deg, #03c75a 30%, #1ee177 90%);
+  color: white;
+  padding: ${({ theme }) => theme.spacing(4)};
+  margin-bottom: ${({ theme }) => theme.spacing(4)};
+  border-radius: ${({ theme }) => theme.spacing(3)};
+`;
