@@ -4,8 +4,7 @@ import {
   createRoutesFromElements,
   Route,
 } from "react-router-dom";
-import { Box, ThemeProvider } from "@mui/material";
-import Header from "./components/Header";
+import { ThemeProvider } from "@mui/material";
 import Home from "./pages/Home/index";
 import TrendingTopics from "./pages/TrendingTopics/index";
 import PromptGuide from "./pages/PromptGuide/index";
