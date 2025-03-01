@@ -12,7 +12,7 @@ import BlogEditor from "./pages/BlogEditor/index";
 import { ThemeProvider as MuiThemeProvider } from "@mui/material/styles";
 import { ThemeProvider as StyledThemeProvider } from "styled-components";
 import { theme } from "./styles/theme"; // MUI theme
-import Layout from "./components/Layout"; //
+import Layout from "./components/Layout";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
