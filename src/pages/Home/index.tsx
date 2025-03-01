@@ -3,6 +3,7 @@ import {
   Typography,
   Grid,
   Box,
+  Paper,
   Card,
   CardContent,
   Chip,
@@ -13,7 +14,7 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import CategoryIcon from "@mui/icons-material/Category";
 import CreateIcon from "@mui/icons-material/Create";
-import { MainBanner } from "./styles";
+import { MainBanner, BannerButton } from "./styles";
 
 const Home = () => {
   const trendingTopics = [
