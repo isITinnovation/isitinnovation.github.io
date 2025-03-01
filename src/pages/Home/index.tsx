@@ -13,8 +13,6 @@ import TrendingUpIcon from "@mui/icons-material/TrendingUp";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import CategoryIcon from "@mui/icons-material/Category";
-import CreateIcon from "@mui/icons-material/Create";
-import { MainBanner, BannerButton } from "./styles";
 
 const Home = () => {
   const trendingTopics = [
@@ -50,14 +48,20 @@ const Home = () => {
   ];
 
   return (
-    <Container
-      maxWidth="lg"
-      sx={{
-        mb: 8,
-        px: { xs: 2, md: 3 },
-      }}
-    >
-      <MainBanner>
+    <Container maxWidth="lg" sx={{ mb: 8 }}>
+      {/* 메인 배너 */}
+      <Paper
+        sx={{
+          p: 4,
+          mb: 4,
+          borderRadius: 3,
+          background: "linear-gradient(45deg, #FF5B59 30%, #FF8E53 90%)",
+          color: "white",
+          display: "flex",
+          flexDirection: "column",
+          gap: 2,
+        }}
+      >
         <Typography variant="h3" sx={{ fontWeight: 800 }}>
           IT 트렌드의 모든 것
         </Typography>
@@ -65,22 +69,21 @@ const Home = () => {
           최신 기술 동향부터 개발 팁까지, 당신이 필요한 모든 IT 정보
         </Typography>
         <Button
-          startIcon={<CreateIcon />}
           variant="contained"
           sx={{
             mt: 2,
-            bgcolor: "linear-gradient(45deg, #2E7D32 30%, #66BB6A 90%)",
-            color: "white",
+            bgcolor: "white",
+            color: "primary.main",
             fontWeight: 600,
             width: "fit-content",
             "&:hover": {
-              boxShadow: "0 2px 8px rgba(46,125,50,0.3)",
+              bgcolor: "grey.100",
             },
           }}
         >
-          글쓰기
+          트렌드 살펴보기
         </Button>
-      </MainBanner>
+      </Paper>
 
       <Grid container spacing={4}>
         {/* 인기 게시글 섹션 */}
@@ -130,11 +133,7 @@ const Home = () => {
                       }}
                     />
                     <Box
-                      sx={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: 0.5,
-                      }}
+                      sx={{ display: "flex", alignItems: "center", gap: 0.5 }}
                     >
                       <VisibilityIcon
                         sx={{ fontSize: 16, color: "grey.500" }}
