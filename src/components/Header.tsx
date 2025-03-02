@@ -12,12 +12,16 @@ import {
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import MenuIcon from "@mui/icons-material/Menu";
-import TrendingUpIcon from "@mui/icons-material/TrendingUp";
-import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
 import CreateIcon from "@mui/icons-material/Create";
+import CloseIcon from "@mui/icons-material/Close";
 import Logo from "./Logo";
 
-const Header = () => {
+interface HeaderProps {
+  isOpen: boolean;
+  setIsOpen: (isOpen: boolean) => void;
+}
+
+const Header = ({ isOpen, setIsOpen }: HeaderProps) => {
   const navigate = useNavigate();
   const [searchValue, setSearchValue] = useState("");
 
@@ -33,6 +37,25 @@ const Header = () => {
     >
       <Container maxWidth="lg">
         <Toolbar sx={{ py: 1.5 }}>
+          {/* 사이드바 토글 버튼 */}
+          <IconButton
+            onClick={() => setIsOpen(!isOpen)}
+            sx={{
+              mr: 2,
+              color: "secondary.main",
+              width: "48px",
+              height: "48px",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              "&:hover": {
+                backgroundColor: "grey.50",
+              },
+            }}
+          >
+            {isOpen ? <CloseIcon /> : <MenuIcon />}
+          </IconButton>
+
           {/* 로고 영역 */}
           <Box
             onClick={() => navigate("/")}
@@ -81,43 +104,20 @@ const Header = () => {
           {/* 메뉴 영역 */}
           <Box sx={{ display: "flex", gap: 1 }}>
             <Button
-              startIcon={<TrendingUpIcon />}
-              onClick={() => navigate("/trending")}
-              sx={{
-                color: "secondary.main",
-                fontWeight: 600,
-                borderRadius: "8px",
-                px: 2,
-                "&:hover": {
-                  backgroundColor: "grey.50",
-                },
-              }}
-            >
-              트렌드
-            </Button>
-            <Button
-              startIcon={<AutoAwesomeIcon />}
-              onClick={() => navigate("/prompt-guide")}
-              sx={{
-                color: "secondary.main",
-                fontWeight: 600,
-                borderRadius: "8px",
-                px: 2,
-                "&:hover": {
-                  backgroundColor: "grey.50",
-                },
-              }}
-            >
-              프롬프트
-            </Button>
-            <Button
-              startIcon={<CreateIcon />}
+              startIcon={
+                <CreateIcon
+                  sx={{ display: { xs: "none", sm: "inline-flex" } }}
+                />
+              }
               variant="contained"
               onClick={() => navigate("/write")}
               sx={{
+                minWidth: { xs: "48px", sm: "auto" },
+                width: { xs: "48px", sm: "auto" },
+                height: "48px",
+                p: { xs: 0, sm: 2 },
                 fontWeight: 600,
                 borderRadius: "8px",
-                px: 3,
                 boxShadow: "none",
                 background: "linear-gradient(45deg, #FF5B59 30%, #FF8E53 90%)",
                 "&:hover": {
@@ -125,57 +125,20 @@ const Header = () => {
                 },
               }}
             >
-              글쓰기
+              <CreateIcon sx={{ display: { xs: "inline-flex", sm: "none" } }} />
+              <Box
+                component="span"
+                sx={{
+                  display: { xs: "none", sm: "inline-flex" },
+                  width: "48px",
+                  justifyContent: "center",
+                }}
+              >
+                글쓰기
+              </Box>
             </Button>
           </Box>
         </Toolbar>
-
-        {/* 카테고리 메뉴 */}
-        <Box
-          sx={{
-            display: "flex",
-            gap: 3,
-            py: 1,
-          }}
-        >
-          <Button
-            startIcon={<MenuIcon />}
-            sx={{
-              color: "secondary.main",
-              fontWeight: 700,
-              borderRadius: "8px",
-              "&:hover": {
-                backgroundColor: "grey.50",
-              },
-            }}
-          >
-            카테고리
-          </Button>
-          <Button
-            sx={{
-              color: "secondary.main",
-              fontWeight: 500,
-              borderRadius: "8px",
-              "&:hover": {
-                backgroundColor: "grey.50",
-              },
-            }}
-          >
-            최신글
-          </Button>
-          <Button
-            sx={{
-              color: "secondary.main",
-              fontWeight: 500,
-              borderRadius: "8px",
-              "&:hover": {
-                backgroundColor: "grey.50",
-              },
-            }}
-          >
-            인기글
-          </Button>
-        </Box>
       </Container>
     </AppBar>
   );

@@ -1,6 +1,8 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Box, ThemeProvider, createTheme } from "@mui/material";
+import { useState } from "react";
 import Header from "./components/Header";
+import Sidebar from "./components/Sidebar";
 import Home from "./pages/Home/index";
 import TrendingTopics from "./pages/TrendingTopics/index";
 import PromptGuide from "./pages/PromptGuide/index";
@@ -29,6 +31,8 @@ const theme = createTheme({
 });
 
 const App = () => {
+  const [isOpen, setIsOpen] = useState(true);
+
   return (
     <ThemeProvider theme={theme}>
       <BrowserRouter basename="/">
@@ -36,21 +40,40 @@ const App = () => {
           sx={{
             minHeight: "100vh",
             bgcolor: "background.default",
+            display: "flex",
           }}
         >
-          <Header />
+          <Sidebar isOpen={isOpen} setIsOpen={setIsOpen} />
           <Box
-            component="main"
             sx={{
-              paddingTop: "140px", // 헤더 높이(약 120px) + 여유 공간
+              flex: 1,
+              marginLeft: { xs: 0, md: "250px" }, // 모바일에서는 마진 제거
+              position: "relative",
+              zIndex: 100, // 사이드바(1000)보다 낮은 z-index 설정
             }}
           >
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/trending" element={<TrendingTopics />} />
-              <Route path="/prompt-guide" element={<PromptGuide />} />
-              <Route path="/write" element={<BlogEditor />} />
-            </Routes>
+            <Box
+              sx={{
+                position: "relative",
+                zIndex: 1200, // 사이드바와 토글 버튼보다 높은 z-index
+              }}
+            >
+              <Header isOpen={isOpen} setIsOpen={setIsOpen} />
+            </Box>
+            <Box
+              component="main"
+              sx={{
+                paddingTop: "140px",
+                paddingX: "2rem",
+              }}
+            >
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/trending" element={<TrendingTopics />} />
+                <Route path="/prompt-guide" element={<PromptGuide />} />
+                <Route path="/write" element={<BlogEditor />} />
+              </Routes>
+            </Box>
           </Box>
         </Box>
       </BrowserRouter>

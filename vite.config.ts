@@ -3,9 +3,10 @@ import react from "@vitejs/plugin-react";
 
 export default defineConfig({
   plugins: [react()],
-  base: "/isITinnovation/", // isitBlog에서 isITinnovation으로 수정
+  base: "/", // isitBlog에서 isITinnovation으로 수정
   server: {
     port: 3000,
+    open: true, // 모든 네트워크 인터페이스에서 접근 허용
   },
   build: {
     outDir: "dist", // 빌드 출력 디렉토리
