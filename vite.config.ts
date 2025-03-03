@@ -3,7 +3,7 @@ import react from "@vitejs/plugin-react";
 
 export default defineConfig({
   plugins: [react()],
-  base: "/", // isitBlog에서 isITinnovation으로 수정
+  base: "/isITinnovation/", // isitBlog에서 isITinnovation으로 수정
   server: {
     port: 3000,
     open: true, // 모든 네트워크 인터페이스에서 접근 허용
