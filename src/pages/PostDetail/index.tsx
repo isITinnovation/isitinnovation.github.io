@@ -13,6 +13,7 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import { PostDetail } from "../../types/post";
 import { postService } from "../../services/postService";
+import "./PostDetail.css";
 
 const PostDetailPage = () => {
   const { id } = useParams();
@@ -22,17 +23,18 @@ const PostDetailPage = () => {
 
   useEffect(() => {
     const fetchPost = async () => {
+      setIsLoading(true);
       try {
         if (!id) return;
         const postData = await postService.getPostById(Number(id));
         if (postData) {
           setPost(postData);
         } else {
-          // 포스트를 찾을 수 없는 경우
-          navigate("/404");
+          navigate("/not-found");
         }
       } catch (error) {
-        console.error("Failed to fetch post:", error);
+        console.error("Error fetching post:", error);
+        navigate("/not-found");
       } finally {
         setIsLoading(false);
       }
@@ -43,8 +45,8 @@ const PostDetailPage = () => {
 
   if (isLoading) {
     return (
-      <Container maxWidth="lg" sx={{ py: 4 }}>
-        <Skeleton variant="rectangular" height={200} />
+      <Container maxWidth="md" className="post-detail-container">
+        <Skeleton variant="rectangular" height={400} />
       </Container>
     );
   }
@@ -52,32 +54,34 @@ const PostDetailPage = () => {
   if (!post) return null;
 
   return (
-    <Container maxWidth="lg" sx={{ py: 4 }}>
-      <Box sx={{ mb: 4 }}>
-        <IconButton onClick={() => navigate(-1)} sx={{ mb: 2 }}>
-          <ArrowBackIcon />
-        </IconButton>
+    <Container
+      maxWidth="md"
+      className="post-detail-container"
+      sx={{ py: { xs: 2, md: 4 }, mt: { xs: -2, md: -4 } }}
+    >
+      <Box className="post-detail-box">
+        <Paper className="post-detail-paper">
+          <Box className="post-detail-header">
+            <IconButton
+              onClick={() => navigate(-1)}
+              className="post-detail-back-button"
+            >
+              <ArrowBackIcon />
+            </IconButton>
 
-        <Paper sx={{ p: 4, borderRadius: 2 }}>
-          <Box sx={{ mb: 3 }}>
             <Chip
               label={post.category}
               size="small"
-              sx={{
-                bgcolor: "primary.main",
-                color: "white",
-                fontWeight: 600,
-                mb: 2,
-              }}
+              className="post-detail-category"
             />
-            <Typography variant="h4" sx={{ fontWeight: 700, mb: 2 }}>
+            <Typography variant="h4" className="post-detail-title">
               {post.title}
             </Typography>
 
-            <Box sx={{ display: "flex", gap: 2, color: "grey.600" }}>
+            <Box className="post-detail-meta">
               <Typography variant="body2">{post.author}</Typography>
               <Typography variant="body2">{post.createdAt}</Typography>
-              <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
+              <Box className="post-detail-views">
                 <VisibilityIcon sx={{ fontSize: 16 }} />
                 <Typography variant="body2">
                   {post.views.toLocaleString()}
@@ -86,7 +90,7 @@ const PostDetailPage = () => {
             </Box>
           </Box>
 
-          <Typography variant="body1" sx={{ lineHeight: 1.8 }}>
+          <Typography variant="body1" className="post-detail-content">
             {post.content}
           </Typography>
         </Paper>
