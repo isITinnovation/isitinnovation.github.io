@@ -9,21 +9,55 @@ import {
   InputBase,
   IconButton,
   Paper,
+  useMediaQuery,
+  Theme,
+  Dialog,
+  DialogContent,
+  Slide,
 } from "@mui/material";
+import { TransitionProps } from "@mui/material/transitions";
 import SearchIcon from "@mui/icons-material/Search";
 import MenuIcon from "@mui/icons-material/Menu";
 import CreateIcon from "@mui/icons-material/Create";
 import CloseIcon from "@mui/icons-material/Close";
 import Logo from "./Logo";
+import React from "react";
+
+const Transition = React.forwardRef(function Transition(
+  props: TransitionProps & {
+    children: React.ReactElement;
+  },
+  ref: React.Ref<unknown>
+) {
+  return <Slide direction="down" ref={ref} {...props} />;
+});
 
 interface HeaderProps {
   isOpen: boolean;
   setIsOpen: (isOpen: boolean) => void;
+  searchValue: string;
+  setSearchValue: (value: string) => void;
 }
 
-const Header = ({ isOpen, setIsOpen }: HeaderProps) => {
+const Header = ({
+  isOpen,
+  setIsOpen,
+  searchValue,
+  setSearchValue,
+}: HeaderProps) => {
   const navigate = useNavigate();
-  const [searchValue, setSearchValue] = useState("");
+  const isMobile = useMediaQuery((theme: Theme) =>
+    theme.breakpoints.down("sm")
+  );
+  const [searchDialogOpen, setSearchDialogOpen] = useState(false);
+
+  const handleSearchOpen = () => {
+    setSearchDialogOpen(true);
+  };
+
+  const handleSearchClose = () => {
+    setSearchDialogOpen(false);
+  };
 
   return (
     <AppBar
@@ -35,74 +69,90 @@ const Header = ({ isOpen, setIsOpen }: HeaderProps) => {
         boxShadow: "0 1px 2px rgba(0,0,0,0.05)",
       }}
     >
-      <Container maxWidth="lg">
-        <Toolbar sx={{ py: 1.5 }}>
-          {/* 사이드바 토글 버튼 */}
-          <IconButton
-            onClick={() => setIsOpen(!isOpen)}
-            sx={{
-              mr: 2,
-              color: "secondary.main",
-              width: "48px",
-              height: "48px",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              "&:hover": {
-                backgroundColor: "grey.50",
-              },
-            }}
-          >
-            {isOpen ? <CloseIcon /> : <MenuIcon />}
-          </IconButton>
+      <Container maxWidth="lg" disableGutters={isMobile}>
+        <Toolbar
+          sx={{
+            py: 1.5,
+            px: isMobile ? 1 : 2,
+            flexWrap: "nowrap",
+            minHeight: "64px",
+            justifyContent: "space-between",
+          }}
+        >
+          <Box sx={{ display: "flex", alignItems: "center", flexShrink: 0 }}>
+            <IconButton
+              onClick={() => setIsOpen(!isOpen)}
+              sx={{
+                color: "secondary.main",
+                width: { xs: "36px", sm: "48px" },
+                height: { xs: "36px", sm: "48px" },
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                "&:hover": {
+                  backgroundColor: "grey.50",
+                },
+              }}
+            >
+              {isOpen ? <CloseIcon /> : <MenuIcon />}
+            </IconButton>
 
-          {/* 로고 영역 */}
-          <Box
-            onClick={() => navigate("/")}
-            sx={{
-              cursor: "pointer",
-              mr: 4,
-              "&:hover": {
-                transform: "translateY(-1px)",
-                transition: "transform 0.2s",
-              },
-            }}
-          >
-            <Logo />
+            <Box
+              onClick={() => navigate("/")}
+              sx={{
+                cursor: "pointer",
+                ml: 0.5,
+                "&:hover": {
+                  transform: "translateY(-1px)",
+                  transition: "transform 0.2s",
+                },
+              }}
+            >
+              <Logo />
+            </Box>
           </Box>
 
-          {/* 검색 영역 */}
-          <Paper
-            elevation={0}
-            sx={{
-              p: "2px 4px",
-              display: "flex",
-              alignItems: "center",
-              flexGrow: 1,
-              maxWidth: 500,
-              border: "2px solid",
-              borderColor: "grey.100",
-              borderRadius: "8px",
-              mr: 4,
-              transition: "all 0.2s",
-              "&:hover": {
-                borderColor: "primary.main",
-              },
-            }}
-          >
-            <InputBase
-              sx={{ ml: 2, flex: 1 }}
-              placeholder="검색어를 입력해주세요"
-              value={searchValue}
-              onChange={(e) => setSearchValue(e.target.value)}
-            />
-            <IconButton sx={{ p: "10px", color: "primary.main" }}>
-              <SearchIcon />
-            </IconButton>
-          </Paper>
+          {isMobile ? (
+            <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+              <IconButton
+                sx={{ color: "primary.main" }}
+                onClick={handleSearchOpen}
+              >
+                <SearchIcon />
+              </IconButton>
+            </Box>
+          ) : (
+            <Paper
+              elevation={0}
+              sx={{
+                p: "2px 4px",
+                display: "flex",
+                alignItems: "center",
+                flexGrow: 1,
+                maxWidth: { sm: 200, md: 300, lg: 500 },
+                mx: 2,
+                border: "2px solid",
+                borderColor: "grey.100",
+                borderRadius: "8px",
+                transition: "all 0.2s",
+                "&:hover": {
+                  borderColor: "primary.main",
+                },
+              }}
+            >
+              <InputBase
+                sx={{ ml: 2, flex: 1 }}
+                placeholder="검색어를 입력해주세요"
+                value={searchValue}
+                onChange={(e) => setSearchValue(e.target.value)}
+              />
+              <IconButton sx={{ p: "10px", color: "primary.main" }}>
+                <SearchIcon />
+              </IconButton>
+            </Paper>
+          )}
 
-          {/* 메뉴 영역 */}
-          <Box sx={{ display: "flex", gap: 1 }}>
+          <Box sx={{ display: "flex", flexShrink: 0 }}>
             <Button
               startIcon={
                 <CreateIcon
@@ -112,9 +162,9 @@ const Header = ({ isOpen, setIsOpen }: HeaderProps) => {
               variant="contained"
               onClick={() => navigate("/write")}
               sx={{
-                minWidth: { xs: "48px", sm: "auto" },
-                width: { xs: "48px", sm: "auto" },
-                height: "48px",
+                minWidth: { xs: "36px", sm: "auto" },
+                width: { xs: "36px", sm: "auto" },
+                height: { xs: "36px", sm: "40px" },
                 p: { xs: 0, sm: 2 },
                 fontWeight: 600,
                 borderRadius: "8px",
@@ -140,6 +190,57 @@ const Header = ({ isOpen, setIsOpen }: HeaderProps) => {
           </Box>
         </Toolbar>
       </Container>
+
+      <Dialog
+        fullWidth
+        open={searchDialogOpen}
+        TransitionComponent={Transition}
+        keepMounted
+        onClose={handleSearchClose}
+        PaperProps={{
+          sx: {
+            position: "absolute",
+            top: 0,
+            m: 0,
+            width: "100%",
+            borderRadius: "0 0 16px 16px",
+            boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+          },
+        }}
+      >
+        <DialogContent sx={{ p: 2 }}>
+          <Paper
+            elevation={0}
+            sx={{
+              p: "2px 4px",
+              display: "flex",
+              alignItems: "center",
+              border: "2px solid",
+              borderColor: "primary.main",
+              borderRadius: "8px",
+            }}
+          >
+            <InputBase
+              autoFocus
+              sx={{ ml: 2, flex: 1 }}
+              placeholder="검색어를 입력해주세요"
+              value={searchValue}
+              onChange={(e) => setSearchValue(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  handleSearchClose();
+                }
+              }}
+            />
+            <IconButton
+              sx={{ p: "10px", color: "primary.main" }}
+              onClick={handleSearchClose}
+            >
+              <SearchIcon />
+            </IconButton>
+          </Paper>
+        </DialogContent>
+      </Dialog>
     </AppBar>
   );
 };

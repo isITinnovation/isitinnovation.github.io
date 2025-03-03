@@ -13,31 +13,41 @@ import TrendingUpIcon from "@mui/icons-material/TrendingUp";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import CategoryIcon from "@mui/icons-material/Category";
+import { useState, useEffect } from "react";
+import { Post } from "../../types/post";
+import { postService } from "../../services/postService";
+import { useNavigate } from "react-router-dom";
 
-const Home = () => {
-  const trendingTopics = [
-    {
-      id: 1,
-      title: "ChatGPT 최신 업데이트",
-      views: 1200,
-      excerpt: "ChatGPT의 최신 기능과 업데이트 소식을 알아보세요.",
-      category: "인공지능",
-    },
-    {
-      id: 2,
-      title: "2024년 IT 트렌드",
-      views: 980,
-      excerpt: "2024년 주목해야 할 IT 업계의 주요 트렌드를 소개합니다.",
-      category: "트렌드",
-    },
-    {
-      id: 3,
-      title: "인공지능 개발 현황",
-      views: 850,
-      excerpt: "최신 AI 개발 동향과 주요 기술 발전 현황을 알아봅니다.",
-      category: "개발",
-    },
-  ];
+interface HomeProps {
+  searchValue: string;
+}
+
+const Home = ({ searchValue }: HomeProps) => {
+  const [trendingTopics, setTrendingTopics] = useState<Post[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchTrendingPosts = async () => {
+      try {
+        const posts = await postService.getTrendingPosts();
+        setTrendingTopics(posts);
+      } catch (error) {
+        console.error("Failed to fetch trending posts:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchTrendingPosts();
+  }, []);
+
+  // 검색어에 따른 필터링된 포스트 목록
+  const filteredPosts = trendingTopics.filter(
+    (post) =>
+      post.title.toLowerCase().includes(searchValue.toLowerCase()) ||
+      post.excerpt.toLowerCase().includes(searchValue.toLowerCase())
+  );
 
   const categories = [
     { name: "인공지능/머신러닝", count: 128 },
@@ -46,6 +56,10 @@ const Home = () => {
     { name: "클라우드/DevOps", count: 64 },
     { name: "보안", count: 52 },
   ];
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <Container maxWidth="lg" sx={{ mb: 8 }}>
@@ -98,17 +112,32 @@ const Home = () => {
           >
             <TrendingUpIcon color="primary" />
             <Typography variant="h5" fontWeight={700}>
-              실시간 인기 게시글
+              {searchValue ? "검색 결과" : "실시간 인기 게시글"}
             </Typography>
+            {searchValue && (
+              <Typography variant="body2" color="grey.600">
+                ({filteredPosts.length}개의 게시글)
+              </Typography>
+            )}
           </Box>
 
+          {filteredPosts.length === 0 && searchValue && (
+            <Box sx={{ textAlign: "center", py: 4 }}>
+              <Typography variant="body1" color="grey.600">
+                검색 결과가 없습니다.
+              </Typography>
+            </Box>
+          )}
+
           <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-            {trendingTopics.map((topic) => (
+            {filteredPosts.map((topic) => (
               <Card
                 key={topic.id}
+                onClick={() => navigate(`/post/${topic.id}`)}
                 sx={{
                   borderRadius: 2,
                   transition: "transform 0.2s",
+                  cursor: "pointer",
                   "&:hover": {
                     transform: "translateY(-2px)",
                     boxShadow: "0 4px 12px rgba(0,0,0,0.1)",

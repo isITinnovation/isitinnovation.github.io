@@ -1,13 +1,13 @@
-interface RouteItem {
+interface Route {
   name: string;
   path: string;
-  icon?: string; // 나중에 아이콘을 추가할 수 있도록 준비
+  icon?: React.ReactNode;
 }
 
-export const ROUTES: RouteItem[] = [
+export const ROUTES: Route[] = [
   {
     name: "홈",
-    path: "/",
+    path: "/isITinnovation",
   },
   {
     name: "트렌드",
