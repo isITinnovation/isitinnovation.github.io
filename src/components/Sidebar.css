@@ -1,0 +1,201 @@
+.sidebar-header h1 {
+  font-size: 1.8rem;
+  margin: 0;
+  padding: 0;
+  text-align: center;
+  position: relative;
+  display: inline-block;
+  background: rgba(255, 91, 89, 0.1);
+  border-radius: 8px;
+  padding: 8px 12px;
+}
+
+.sidebar-logo-text {
+  display: inline-block;
+}
+
+.sidebar-logo-is {
+  color: #FF5B59;
+  text-shadow: 0 0 5px rgba(255, 91, 89, 0.8);
+  animation: starTwinkle 3s infinite alternate;
+  font-weight: 700;
+}
+
+.sidebar-logo-it {
+  color: #FF7A78;
+  text-shadow: 0 0 8px rgba(255, 122, 120, 0.9);
+  animation: nebulaPulse 4s infinite;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+
+.sidebar-logo-blog {
+  background: linear-gradient(90deg, #FF5B59, #FF7A78, #FF8E53);
+  background-size: 300% auto;
+  color: transparent;
+  -webkit-background-clip: text;
+  background-clip: text;
+  animation: galaxyFlow 8s ease infinite;
+  font-weight: 600;
+}
+
+.sidebar-header h1:hover .sidebar-logo-is,
+.sidebar-header h1:hover .sidebar-logo-it,
+.sidebar-header h1:hover .sidebar-logo-blog {
+  animation-play-state: paused;
+  transform: scale(1.1);
+  transition: transform 0.3s ease;
+}
+
+.sidebar-header h1::before {
+  content: '';
+  position: absolute;
+  top: -5px;
+  left: -5px;
+  right: -5px;
+  bottom: -5px;
+  background: linear-gradient(45deg, #FF5B59, transparent, #FF7A78, transparent, #FF8E53);
+  background-size: 400% 400%;
+  z-index: -1;
+  filter: blur(8px);
+  opacity: 0.7;
+  border-radius: 12px;
+  animation: galaxyFlow 10s ease infinite;
+}
+
+@keyframes starTwinkle {
+  0% {
+    opacity: 0.7;
+    transform: scale(0.95);
+  }
+  50% {
+    opacity: 1;
+    text-shadow: 0 0 10px rgba(255, 91, 89, 0.9), 0 0 20px rgba(255, 91, 89, 0.5);
+  }
+  100% {
+    opacity: 0.9;
+    transform: scale(1.05);
+    text-shadow: 0 0 15px rgba(255, 91, 89, 1), 0 0 30px rgba(255, 91, 89, 0.7);
+  }
+}
+
+@keyframes nebulaPulse {
+  0% {
+    color: #FF5B59;
+    text-shadow: 0 0 8px rgba(255, 91, 89, 0.9);
+  }
+  33% {
+    color: #FF7A78;
+    text-shadow: 0 0 12px rgba(255, 122, 120, 0.9), 0 0 20px rgba(255, 122, 120, 0.5);
+  }
+  66% {
+    color: #FF8E53;
+    text-shadow: 0 0 15px rgba(255, 142, 83, 0.9), 0 0 25px rgba(255, 142, 83, 0.5);
+  }
+  100% {
+    color: #FF5B59;
+    text-shadow: 0 0 8px rgba(255, 91, 89, 0.9);
+  }
+}
+
+@keyframes galaxyFlow {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* 기존 사이드바 스타일과 함께 사용할 수 있도록 추가 */
+.sidebar-header {
+  padding: 1.5rem 1rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* 사이드바 메뉴 스타일 추가 */
+.sidebar-menu {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sidebar-link {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  color: #495057;
+  text-decoration: none;
+  border-radius: 0.5rem;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 0.5rem;
+}
+
+.sidebar-link:before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 0;
+  background-color: rgba(255, 91, 89, 0.1);
+  transition: width 0.3s ease;
+  z-index: -1;
+}
+
+.sidebar-link:hover {
+  color: #FF5B59;
+  background-color: rgba(255, 91, 89, 0.05);
+  transform: translateX(5px);
+  box-shadow: 0 2px 8px rgba(255, 91, 89, 0.2);
+}
+
+.sidebar-link:hover:before {
+  width: 100%;
+}
+
+.sidebar-link.active {
+  background: linear-gradient(90deg, #FF5B59, #FF7A78);
+  color: white;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(255, 91, 89, 0.3);
+}
+
+.sidebar-link.active:hover {
+  transform: translateX(5px) scale(1.02);
+  background: linear-gradient(90deg, #FF5B59, #FF8E53);
+}
+
+.sidebar-icon {
+  margin-right: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.3s ease;
+}
+
+.sidebar-link:hover .sidebar-icon {
+  transform: scale(1.2);
+  color: #FF5B59;
+}
+
+.sidebar-link.active .sidebar-icon {
+  color: white;
+}
+
+.sidebar-text {
+  font-size: 1rem;
+  transition: transform 0.3s ease;
+}
+
+.sidebar-link:hover .sidebar-text {
+  transform: translateX(3px);
+} 

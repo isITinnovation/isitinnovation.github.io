@@ -2,6 +2,8 @@ import { useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { ROUTES } from "../constants/routes";
 import "../styles/Sidebar.css";
+import "./Sidebar.css";
+import { useMediaQuery, useTheme } from "@mui/material";
 
 interface SidebarProps {
   isOpen: boolean;
@@ -10,6 +12,8 @@ interface SidebarProps {
 
 const Sidebar = ({ isOpen, setIsOpen }: SidebarProps) => {
   const location = useLocation();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
   // 모바일에서 사이드바 열린 상태로 스크롤 방지
   useEffect(() => {
@@ -23,17 +27,23 @@ const Sidebar = ({ isOpen, setIsOpen }: SidebarProps) => {
     };
   }, [isOpen]);
 
-  //   // 라우트 변경시 모바일에서 사이드바 자동으로 닫기
-  //   useEffect(() => {
-  //     setIsOpen(false);
-  //   }, [location, setIsOpen]);
+  // 메뉴 항목 클릭 핸들러
+  const handleMenuClick = () => {
+    if (isMobile) {
+      setIsOpen(false);
+    }
+  };
 
   return (
     <>
       <nav className={`sidebar ${isOpen ? "open" : ""}`}>
         <div className="sidebar-content">
           <div className="sidebar-header">
-            <h1>isIT Blog</h1>
+            <h1>
+              <span className="sidebar-logo-is">is</span>
+              <span className="sidebar-logo-it">IT</span>
+              <span className="sidebar-logo-blog"> Blog</span>
+            </h1>
           </div>
           <ul className="sidebar-menu">
             {ROUTES.map((route) => (
@@ -43,6 +53,7 @@ const Sidebar = ({ isOpen, setIsOpen }: SidebarProps) => {
                   className={`sidebar-link ${
                     location.pathname === route.path ? "active" : ""
                   }`}
+                  onClick={handleMenuClick}
                 >
                   {route.icon && (
                     <span className="sidebar-icon">{route.icon}</span>
