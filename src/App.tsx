@@ -79,6 +79,10 @@ const App = () => {
               sx={{
                 paddingTop: "140px",
                 paddingX: "2rem",
+                height: "100vh",
+                overflowY: "auto",
+                display: "flex",
+                flexDirection: "column",
               }}
             >
               <Routes>

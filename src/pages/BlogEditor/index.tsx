@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Container,
   Typography,
@@ -7,6 +7,10 @@ import {
   IconButton,
   Paper,
   Box,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
 } from "@mui/material";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
@@ -17,12 +21,22 @@ import CodeIcon from "@mui/icons-material/Code";
 import LinkIcon from "@mui/icons-material/Link";
 import ImageIcon from "@mui/icons-material/Image";
 import CloseIcon from "@mui/icons-material/Close";
+import SeoAnalyzer from "../../components/SeoAnalyzer";
+import "./BlogEditor.css";
 
 const BlogEditor = () => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [tags, setTags] = useState<string[]>([]);
   const [newTag, setNewTag] = useState("");
+  const [category, setCategory] = useState("기술");
+  const [showSeoAnalyzer, setShowSeoAnalyzer] = useState(false);
+
+  useEffect(() => {
+    if (title.trim() && content.trim() && !showSeoAnalyzer) {
+      setShowSeoAnalyzer(true);
+    }
+  }, [title, content, category, showSeoAnalyzer]);
 
   const handleToolbarClick = (type: string) => {
     const commands: { [key: string]: { prefix: string; suffix: string } } = {
@@ -68,6 +82,19 @@ const BlogEditor = () => {
     setTags(tags.filter((tag) => tag !== tagToRemove));
   };
 
+  const categories = [
+    "기술",
+    "개발",
+    "프로그래밍",
+    "인공지능",
+    "웹개발",
+    "모바일",
+    "데이터",
+    "클라우드",
+    "보안",
+    "기타",
+  ];
+
   const handleSave = () => {
     if (!title.trim()) {
       alert("제목을 입력해주세요.");
@@ -77,16 +104,16 @@ const BlogEditor = () => {
       alert("내용을 입력해주세요.");
       return;
     }
-    console.log({ title, content, tags });
+    console.log({ title, content, tags, category });
   };
 
   return (
-    <Container maxWidth="lg" sx={{ py: 4 }}>
+    <Container maxWidth="lg" className="blog-editor-container">
       <Typography variant="h4" gutterBottom>
         블로그 작성
       </Typography>
 
-      <Paper sx={{ p: 3, mt: 2 }}>
+      <Paper className="blog-editor-paper">
         <TextField
           fullWidth
           label="제목"
@@ -95,6 +122,36 @@ const BlogEditor = () => {
           onChange={(e) => setTitle(e.target.value)}
           sx={{ mb: 3 }}
         />
+
+        <Box sx={{ display: "flex", gap: 2, mb: 3 }}>
+          <FormControl fullWidth variant="outlined">
+            <InputLabel>카테고리</InputLabel>
+            <Select
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
+              label="카테고리"
+            >
+              {categories.map((cat) => (
+                <MenuItem key={cat} value={cat}>
+                  {cat}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+
+          <Button
+            variant="outlined"
+            color="primary"
+            onClick={() => setShowSeoAnalyzer(!showSeoAnalyzer)}
+            sx={{ minWidth: "180px" }}
+          >
+            {showSeoAnalyzer ? "SEO 분석 숨기기" : "SEO 분석 보기"}
+          </Button>
+        </Box>
+
+        {showSeoAnalyzer && (
+          <SeoAnalyzer title={title} content={content} category={category} />
+        )}
 
         <Box
           sx={{
@@ -175,36 +232,14 @@ const BlogEditor = () => {
           </IconButton>
         </Box>
 
-        <Box
-          sx={{
-            display: "grid",
-            gridTemplateColumns: "1fr 1fr",
-            gap: 2,
-            minHeight: "500px",
-          }}
-        >
+        <Box className="editor-grid">
           <textarea
             value={content}
             onChange={(e) => setContent(e.target.value)}
             placeholder="마크다운으로 작성해주세요..."
-            style={{
-              width: "100%",
-              height: "100%",
-              padding: "1rem",
-              border: "1px solid #ddd",
-              borderRadius: "4px",
-              resize: "none",
-              fontFamily: "monospace",
-            }}
+            className="editor-textarea"
           />
-          <Box
-            sx={{
-              border: "1px solid #ddd",
-              borderRadius: 1,
-              p: 2,
-              overflowY: "auto",
-            }}
-          >
+          <Box className="preview-box">
             <ReactMarkdown
               remarkPlugins={[remarkGfm]}
               rehypePlugins={[rehypeRaw]}

@@ -14,6 +14,7 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import { PostDetail } from "../../types/post";
 import { postService } from "../../services/postService";
 import "./PostDetail.css";
+import SeoAnalyzer from "../../components/SeoAnalyzer";
 
 const PostDetailPage = () => {
   const { id } = useParams();
@@ -60,6 +61,14 @@ const PostDetailPage = () => {
       sx={{ py: { xs: 2, md: 4 }, mt: { xs: -2, md: -4 } }}
     >
       <Box className="post-detail-box">
+        {post && (
+          <SeoAnalyzer
+            title={post.title}
+            content={post.content}
+            category={post.category}
+          />
+        )}
+
         <Paper className="post-detail-paper">
           <Box className="post-detail-header">
             <IconButton
