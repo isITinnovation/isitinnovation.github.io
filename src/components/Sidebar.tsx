@@ -2,7 +2,6 @@ import { useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { ROUTES } from "../constants/routes";
 import "../styles/Sidebar.css";
-import "./Sidebar.css";
 import { useMediaQuery, useTheme } from "@mui/material";
 
 interface SidebarProps {
@@ -40,9 +39,7 @@ const Sidebar = ({ isOpen, setIsOpen }: SidebarProps) => {
         <div className="sidebar-content">
           <div className="sidebar-header">
             <h1>
-              <span className="sidebar-logo-is">is</span>
-              <span className="sidebar-logo-it">IT</span>
-              <span className="sidebar-logo-blog"> Blog</span>
+              <span className="sidebar-logo-blog">isITBlog</span>
             </h1>
           </div>
           <ul className="sidebar-menu">

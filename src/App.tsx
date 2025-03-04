@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { Box, ThemeProvider, createTheme, useMediaQuery } from "@mui/material";
+import { Box, useMediaQuery, ThemeProvider } from "@mui/material";
 import { useState, useEffect } from "react";
 import Header from "./components/Header";
 import Sidebar from "./components/Sidebar";
@@ -8,28 +8,7 @@ import TrendingTopics from "./pages/TrendingTopics/index";
 import PromptGuide from "./pages/PromptGuide/index";
 import BlogEditor from "./pages/BlogEditor/index";
 import PostDetailPage from "./pages/PostDetail";
-
-const theme = createTheme({
-  palette: {
-    primary: {
-      main: "#FF5B59",
-      light: "#FF7A78",
-      dark: "#E63E3C",
-    },
-    secondary: {
-      main: "#222222",
-      light: "#666666",
-      dark: "#000000",
-    },
-    background: {
-      default: "#F8F8F8",
-      paper: "#FFFFFF",
-    },
-  },
-  typography: {
-    fontFamily: '"Noto Sans KR", "Roboto", sans-serif',
-  },
-});
+import { theme } from "./styles/theme";
 
 const App = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
@@ -44,11 +23,18 @@ const App = () => {
   return (
     <ThemeProvider theme={theme}>
       <BrowserRouter basename="/">
+        <Header
+          isOpen={isOpen}
+          setIsOpen={setIsOpen}
+          searchValue={searchValue}
+          setSearchValue={setSearchValue}
+        />
         <Box
           sx={{
             minHeight: "100vh",
             bgcolor: "background.default",
             display: "flex",
+            paddingTop: "80px", // Header 높이만큼 여백 추가
           }}
         >
           <Sidebar isOpen={isOpen} setIsOpen={setIsOpen} />
@@ -62,22 +48,9 @@ const App = () => {
             }}
           >
             <Box
-              sx={{
-                position: "relative",
-                zIndex: 1200,
-              }}
-            >
-              <Header
-                isOpen={isOpen}
-                setIsOpen={setIsOpen}
-                searchValue={searchValue}
-                setSearchValue={setSearchValue}
-              />
-            </Box>
-            <Box
               component="main"
               sx={{
-                paddingTop: "140px",
+                paddingTop: "60px",
                 paddingX: "2rem",
                 height: "100vh",
                 overflowY: "auto",

@@ -3,7 +3,6 @@ import {
   Typography,
   Grid,
   Box,
-  Paper,
   Card,
   CardContent,
   Chip,
@@ -64,40 +63,6 @@ const Home = ({ searchValue }: HomeProps) => {
   return (
     <Container maxWidth="lg" sx={{ mb: 8 }}>
       {/* 메인 배너 */}
-      <Paper
-        sx={{
-          p: 4,
-          mb: 4,
-          borderRadius: 3,
-          background: "linear-gradient(45deg, #FF5B59 30%, #FF8E53 90%)",
-          color: "white",
-          display: "flex",
-          flexDirection: "column",
-          gap: 2,
-        }}
-      >
-        <Typography variant="h3" sx={{ fontWeight: 800 }}>
-          IT 트렌드의 모든 것
-        </Typography>
-        <Typography variant="h6" sx={{ opacity: 0.9 }}>
-          최신 기술 동향부터 개발 팁까지, 당신이 필요한 모든 IT 정보
-        </Typography>
-        <Button
-          variant="contained"
-          sx={{
-            mt: 2,
-            bgcolor: "white",
-            color: "primary.main",
-            fontWeight: 600,
-            width: "fit-content",
-            "&:hover": {
-              bgcolor: "grey.100",
-            },
-          }}
-        >
-          트렌드 살펴보기
-        </Button>
-      </Paper>
 
       <Grid container spacing={4}>
         {/* 인기 게시글 섹션 */}

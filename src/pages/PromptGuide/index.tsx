@@ -70,42 +70,83 @@ const PromptGuide = () => {
           p: 4,
           mb: 4,
           borderRadius: 3,
-          background: "linear-gradient(45deg, #FF5B59 30%, #FF8E53 90%)",
+          background: "linear-gradient(135deg, #6C63FF 0%, #E553FF 100%)",
           color: "white",
           display: "flex",
           flexDirection: "column",
           gap: 2,
+          boxShadow: "0 8px 20px rgba(108, 99, 255, 0.3)",
+          position: "relative",
+          overflow: "hidden",
+          "&::before": {
+            content: '""',
+            position: "absolute",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background:
+              "radial-gradient(circle at 70% 30%, rgba(255, 255, 255, 0.15) 0%, transparent 50%)",
+            zIndex: 1,
+          },
+          "&::after": {
+            content: '""',
+            position: "absolute",
+            top: -50,
+            right: -50,
+            width: 200,
+            height: 200,
+            borderRadius: "50%",
+            background:
+              "radial-gradient(circle, rgba(229, 83, 255, 0.3) 0%, transparent 70%)",
+            zIndex: 0,
+          },
         }}
       >
-        <Typography variant="h3" sx={{ fontWeight: 800 }}>
-          프롬프트 가이드
-        </Typography>
-        <Typography variant="h6" sx={{ opacity: 0.9 }}>
-          AI와 더 효과적으로 대화하기 위한 최적의 프롬프트 모음
-        </Typography>
-        <TextField
-          fullWidth
-          variant="outlined"
-          placeholder="원하는 프롬프트를 검색해보세요"
-          sx={{
-            mt: 2,
-            maxWidth: 500,
-            "& .MuiOutlinedInput-root": {
-              bgcolor: "white",
-              borderRadius: 2,
-              "& fieldset": {
-                border: "none",
+        <Box sx={{ position: "relative", zIndex: 2 }}>
+          <Typography
+            variant="h3"
+            sx={{
+              fontWeight: 800,
+              textShadow: "0 2px 10px rgba(0, 0, 0, 0.2)",
+            }}
+          >
+            프롬프트 가이드
+          </Typography>
+          <Typography
+            variant="h6"
+            sx={{ opacity: 0.9, textShadow: "0 1px 5px rgba(0, 0, 0, 0.2)" }}
+          >
+            AI와 더 효과적으로 대화하기 위한 최적의 프롬프트 모음
+          </Typography>
+          <TextField
+            fullWidth
+            variant="outlined"
+            placeholder="원하는 프롬프트를 검색해보세요"
+            sx={{
+              mt: 2,
+              maxWidth: 500,
+              "& .MuiOutlinedInput-root": {
+                bgcolor: "rgba(255, 255, 255, 0.9)",
+                borderRadius: 2,
+                "& fieldset": {
+                  border: "none",
+                },
+                "&:hover": {
+                  bgcolor: "white",
+                  boxShadow: "0 0 15px rgba(255, 255, 255, 0.3)",
+                },
               },
-            },
-          }}
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <SearchIcon color="primary" />
-              </InputAdornment>
-            ),
-          }}
-        />
+            }}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchIcon sx={{ color: "#6C63FF" }} />
+                </InputAdornment>
+              ),
+            }}
+          />
+        </Box>
       </Paper>
 
       {/* 카테고리 필터 */}
@@ -118,10 +159,13 @@ const PromptGuide = () => {
               borderRadius: "20px",
               px: 2,
               py: 0.5,
-              color: category === "전체" ? "white" : "primary.main",
+              color: category === "전체" ? "white" : "#6C63FF",
+              borderColor: category !== "전체" ? "#6C63FF" : "transparent",
+              backgroundColor: category === "전체" ? "#6C63FF" : "transparent",
               "&:hover": {
                 bgcolor:
-                  category === "전체" ? "primary.dark" : "background.paper",
+                  category === "전체" ? "#5952E5" : "rgba(108, 99, 255, 0.1)",
+                boxShadow: "0 0 10px rgba(108, 99, 255, 0.2)",
               },
             }}
           >
@@ -140,8 +184,8 @@ const PromptGuide = () => {
             mb: 3,
           }}
         >
-          <StarIcon color="primary" />
-          <Typography variant="h5" fontWeight={700}>
+          <StarIcon sx={{ color: "#E553FF" }} />
+          <Typography variant="h5" fontWeight={700} sx={{ color: "#ffffff" }}>
             인기 프롬프트
           </Typography>
         </Box>
@@ -153,10 +197,14 @@ const PromptGuide = () => {
                 sx={{
                   height: "100%",
                   borderRadius: 2,
-                  transition: "transform 0.2s",
+                  transition: "all 0.3s",
+                  backgroundColor: "rgba(26, 27, 70, 0.7)",
+                  backdropFilter: "blur(5px)",
+                  border: "1px solid rgba(108, 99, 255, 0.2)",
                   "&:hover": {
-                    transform: "translateY(-2px)",
-                    boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+                    transform: "translateY(-5px)",
+                    boxShadow: "0 8px 25px rgba(108, 99, 255, 0.3)",
+                    borderColor: "rgba(229, 83, 255, 0.4)",
                   },
                 }}
               >
@@ -172,7 +220,7 @@ const PromptGuide = () => {
                       label={item.category}
                       size="small"
                       sx={{
-                        bgcolor: "primary.main",
+                        bgcolor: "#6C63FF",
                         color: "white",
                         fontWeight: 600,
                       }}
@@ -180,17 +228,26 @@ const PromptGuide = () => {
                     <Box
                       sx={{ display: "flex", alignItems: "center", gap: 0.5 }}
                     >
-                      <ThumbUpIcon sx={{ fontSize: 16, color: "grey.500" }} />
-                      <Typography variant="body2" color="grey.500">
+                      <ThumbUpIcon sx={{ fontSize: 16, color: "#E553FF" }} />
+                      <Typography
+                        variant="body2"
+                        sx={{ color: "rgba(255, 255, 255, 0.8)" }}
+                      >
                         {item.likes}
                       </Typography>
                     </Box>
                   </Box>
 
-                  <Typography variant="h6" sx={{ fontWeight: 600, mb: 1 }}>
+                  <Typography
+                    variant="h6"
+                    sx={{ fontWeight: 600, mb: 1, color: "#ffffff" }}
+                  >
                     {item.title}
                   </Typography>
-                  <Typography variant="body2" color="grey.600" sx={{ mb: 2 }}>
+                  <Typography
+                    variant="body2"
+                    sx={{ mb: 2, color: "rgba(255, 255, 255, 0.7)" }}
+                  >
                     {item.description}
                   </Typography>
 
@@ -199,24 +256,28 @@ const PromptGuide = () => {
                     sx={{
                       p: 2,
                       borderRadius: 2,
-                      bgcolor: "grey.50",
+                      bgcolor: "rgba(10, 15, 41, 0.7)",
+                      border: "1px solid rgba(108, 99, 255, 0.3)",
                       position: "relative",
                     }}
                   >
-                    <Typography variant="body2" color="grey.800">
+                    <Typography
+                      variant="body2"
+                      sx={{ color: "rgba(255, 255, 255, 0.9)" }}
+                    >
                       {item.prompt}
                     </Typography>
                     <Button
                       size="small"
-                      startIcon={<ContentCopyIcon />}
+                      startIcon={<ContentCopyIcon sx={{ color: "#E553FF" }} />}
                       onClick={() => handleCopyPrompt(item.prompt)}
                       sx={{
                         position: "absolute",
                         right: 8,
                         top: 8,
-                        color: "grey.600",
+                        color: "#E553FF",
                         "&:hover": {
-                          bgcolor: "background.paper",
+                          bgcolor: "rgba(229, 83, 255, 0.1)",
                         },
                       }}
                     >

@@ -80,42 +80,71 @@ const TrendingTopics = () => {
           p: 4,
           mb: 4,
           borderRadius: 3,
-          background: "linear-gradient(45deg, #FF5B59 30%, #FF8E53 90%)",
+          background: "linear-gradient(135deg, #5D5DFF 0%, #33BBCF 100%)",
           color: "white",
           display: "flex",
           flexDirection: "column",
           gap: 2,
+          boxShadow: "0 8px 20px rgba(93, 93, 255, 0.3)",
+          position: "relative",
+          overflow: "hidden",
+          "&::before": {
+            content: '""',
+            position: "absolute",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background:
+              "radial-gradient(circle at 30% 40%, rgba(255, 255, 255, 0.1) 0%, transparent 40%)",
+            zIndex: 1,
+          },
         }}
       >
-        <Typography variant="h3" sx={{ fontWeight: 800 }}>
-          실시간 트렌딩
-        </Typography>
-        <Typography variant="h6" sx={{ opacity: 0.9 }}>
-          IT 업계의 최신 트렌드와 인사이트를 확인하세요
-        </Typography>
-        <TextField
-          fullWidth
-          variant="outlined"
-          placeholder="관심있는 기술이나 트렌드를 검색해보세요"
-          sx={{
-            mt: 2,
-            maxWidth: 500,
-            "& .MuiOutlinedInput-root": {
-              bgcolor: "white",
-              borderRadius: 2,
-              "& fieldset": {
-                border: "none",
+        <Box sx={{ position: "relative", zIndex: 2 }}>
+          <Typography
+            variant="h3"
+            sx={{
+              fontWeight: 800,
+              textShadow: "0 2px 10px rgba(0, 0, 0, 0.2)",
+            }}
+          >
+            실시간 트렌딩
+          </Typography>
+          <Typography
+            variant="h6"
+            sx={{ opacity: 0.9, textShadow: "0 1px 5px rgba(0, 0, 0, 0.2)" }}
+          >
+            IT 업계의 최신 트렌드와 인사이트를 확인하세요
+          </Typography>
+          <TextField
+            fullWidth
+            variant="outlined"
+            placeholder="관심있는 기술이나 트렌드를 검색해보세요"
+            sx={{
+              mt: 2,
+              maxWidth: 500,
+              "& .MuiOutlinedInput-root": {
+                bgcolor: "rgba(255, 255, 255, 0.9)",
+                borderRadius: 2,
+                "& fieldset": {
+                  border: "none",
+                },
+                "&:hover": {
+                  bgcolor: "white",
+                  boxShadow: "0 0 15px rgba(255, 255, 255, 0.3)",
+                },
               },
-            },
-          }}
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <SearchIcon color="primary" />
-              </InputAdornment>
-            ),
-          }}
-        />
+            }}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchIcon sx={{ color: "#5D5DFF" }} />
+                </InputAdornment>
+              ),
+            }}
+          />
+        </Box>
       </Paper>
 
       {/* 카테고리 필터 */}
@@ -128,10 +157,13 @@ const TrendingTopics = () => {
               borderRadius: "20px",
               px: 2,
               py: 0.5,
-              color: category === "전체" ? "white" : "primary.main",
+              color: category === "전체" ? "white" : "#5D5DFF",
+              borderColor: category !== "전체" ? "#5D5DFF" : "transparent",
+              backgroundColor: category === "전체" ? "#5D5DFF" : "transparent",
               "&:hover": {
                 bgcolor:
-                  category === "전체" ? "primary.dark" : "background.paper",
+                  category === "전체" ? "#4040CC" : "rgba(93, 93, 255, 0.1)",
+                boxShadow: "0 0 10px rgba(93, 93, 255, 0.2)",
               },
             }}
           >
@@ -150,8 +182,8 @@ const TrendingTopics = () => {
             mb: 3,
           }}
         >
-          <LocalFireDepartmentIcon color="primary" />
-          <Typography variant="h5" fontWeight={700}>
+          <LocalFireDepartmentIcon sx={{ color: "#33BBCF" }} />
+          <Typography variant="h5" fontWeight={700} sx={{ color: "#ffffff" }}>
             실시간 인기 포스트
           </Typography>
         </Box>
@@ -162,10 +194,14 @@ const TrendingTopics = () => {
               <Card
                 sx={{
                   borderRadius: 2,
-                  transition: "transform 0.2s",
+                  transition: "all 0.3s",
+                  backgroundColor: "rgba(26, 27, 70, 0.7)",
+                  backdropFilter: "blur(5px)",
+                  border: "1px solid rgba(93, 93, 255, 0.2)",
                   "&:hover": {
                     transform: "translateX(4px)",
-                    boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+                    boxShadow: "0 4px 20px rgba(93, 93, 255, 0.3)",
+                    borderColor: "rgba(93, 93, 255, 0.4)",
                   },
                 }}
               >
@@ -184,7 +220,7 @@ const TrendingTopics = () => {
                           label={post.category}
                           size="small"
                           sx={{
-                            bgcolor: "primary.main",
+                            bgcolor: "#5D5DFF",
                             color: "white",
                             fontWeight: 600,
                           }}
@@ -193,27 +229,29 @@ const TrendingTopics = () => {
                           <Chip
                             icon={
                               <TrendingUpIcon
-                                sx={{ fontSize: 16, color: "error.main" }}
+                                sx={{ fontSize: 16, color: "#33BBCF" }}
                               />
                             }
                             label="트렌딩"
                             size="small"
                             variant="outlined"
                             sx={{
-                              color: "error.main",
-                              borderColor: "error.main",
+                              color: "#33BBCF",
+                              borderColor: "#33BBCF",
                               fontWeight: 600,
                             }}
                           />
                         )}
                       </Box>
-                      <Typography variant="h6" sx={{ fontWeight: 600, mb: 1 }}>
+                      <Typography
+                        variant="h6"
+                        sx={{ fontWeight: 600, mb: 1, color: "#ffffff" }}
+                      >
                         {post.title}
                       </Typography>
                       <Typography
                         variant="body2"
-                        color="grey.600"
-                        sx={{ mb: 2 }}
+                        sx={{ mb: 2, color: "rgba(255, 255, 255, 0.7)" }}
                       >
                         {post.excerpt}
                       </Typography>
@@ -227,13 +265,16 @@ const TrendingTopics = () => {
                             sx={{
                               width: 24,
                               height: 24,
-                              bgcolor: "primary.main",
+                              bgcolor: "#5D5DFF",
                               fontSize: "0.875rem",
                             }}
                           >
                             {post.authorAvatar}
                           </Avatar>
-                          <Typography variant="body2" color="grey.700">
+                          <Typography
+                            variant="body2"
+                            sx={{ color: "rgba(255, 255, 255, 0.9)" }}
+                          >
                             {post.author}
                           </Typography>
                         </Box>
@@ -248,9 +289,15 @@ const TrendingTopics = () => {
                             }}
                           >
                             <AccessTimeIcon
-                              sx={{ fontSize: 16, color: "grey.500" }}
+                              sx={{
+                                fontSize: 16,
+                                color: "rgba(255, 255, 255, 0.6)",
+                              }}
                             />
-                            <Typography variant="body2" color="grey.500">
+                            <Typography
+                              variant="body2"
+                              sx={{ color: "rgba(255, 255, 255, 0.6)" }}
+                            >
                               {post.timeAgo}
                             </Typography>
                           </Box>
@@ -262,9 +309,15 @@ const TrendingTopics = () => {
                             }}
                           >
                             <VisibilityIcon
-                              sx={{ fontSize: 16, color: "grey.500" }}
+                              sx={{
+                                fontSize: 16,
+                                color: "rgba(255, 255, 255, 0.6)",
+                              }}
                             />
-                            <Typography variant="body2" color="grey.500">
+                            <Typography
+                              variant="body2"
+                              sx={{ color: "rgba(255, 255, 255, 0.6)" }}
+                            >
                               {post.views.toLocaleString()}
                             </Typography>
                           </Box>
@@ -276,9 +329,15 @@ const TrendingTopics = () => {
                             }}
                           >
                             <CommentIcon
-                              sx={{ fontSize: 16, color: "grey.500" }}
+                              sx={{
+                                fontSize: 16,
+                                color: "rgba(255, 255, 255, 0.6)",
+                              }}
                             />
-                            <Typography variant="body2" color="grey.500">
+                            <Typography
+                              variant="body2"
+                              sx={{ color: "rgba(255, 255, 255, 0.6)" }}
+                            >
                               {post.comments}
                             </Typography>
                           </Box>
