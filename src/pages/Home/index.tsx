@@ -93,7 +93,7 @@ const Home = ({ searchValue }: HomeProps) => {
               sx={{
                 color: "#1A237E",
                 textShadow: "1px 1px 2px rgba(255,255,255,0.5)",
-                background: "rgba(255,255,255,0.8)",
+                // background: "rgba(255,255,255,0.8)",
                 padding: "4px 8px",
                 borderRadius: "4px",
                 boxShadow: "0 2px 4px rgba(0,0,0,0.1)",

@@ -32,7 +32,7 @@ const Logo = () => {
           sx={{
             fontWeight: 800,
             fontSize: "22px",
-            background: "linear-gradient(45deg, #FF5B59 30%, #FF8E53 90%)",
+            background: "linear-gradient(45deg, #FFD700 30%, #FFA500 90%)",
             WebkitBackgroundClip: "text",
             WebkitTextFillColor: "transparent",
             letterSpacing: "-0.5px",
@@ -43,7 +43,6 @@ const Logo = () => {
         <Typography
           sx={{
             fontSize: "12px",
-            color: "secondary.main",
             fontWeight: 600,
             letterSpacing: "2px",
             marginTop: "-4px",

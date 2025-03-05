@@ -1,3 +1,8 @@
+:root {
+  --primary-color: #1976d2;
+}
+
+/* 기본 레이아웃 스타일 */
 .post-detail-container {
   max-width: 100%;
   width: 100%;
@@ -8,22 +13,23 @@
   width: 100%;
 }
 
-.post-detail-back-button {
-  margin-bottom: 1rem;
-  margin-left: -0.5rem;
-}
-
 .post-detail-paper {
-  border-radius: 8px;
   min-height: 80vh;
   display: flex;
   flex-direction: column;
   width: 100%;
   max-width: 100%;
+  border-radius: 8px;
 }
 
+/* 헤더 및 메타 정보 스타일 */
 .post-detail-header {
   padding: 1.5rem 1.5rem 0;
+}
+
+.post-detail-back-button {
+  margin-bottom: 1rem;
+  margin-left: -0.5rem;
 }
 
 .post-detail-category {
@@ -38,23 +44,26 @@
 }
 
 .post-detail-meta {
-  display: flex;
   justify-content: left;
   color: #666;
   margin-bottom: 2rem;
 }
-.post-detail-author{
+
+.post-detail-author {
   margin-right: 1rem;
 }
-.post-detail-createdAt{
+
+.post-detail-createdAt {
   margin-right: 1rem;
 }
+
 .post-detail-views {
   display: flex;
   align-items: center;
   gap: 0.5rem;
 }
 
+/* 콘텐츠 영역 기본 스타일 */
 .post-detail-content {
   padding: 0 1.5rem 1.5rem;
   flex: 1;
@@ -62,39 +71,7 @@
   height: auto !important;
 }
 
-/* 이미지 사이즈 조절 */
-.post-detail-content img {
-  max-width: 100%;
-  height: auto;
-  display: block;
-  margin: 1rem auto;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-/* 반응형 이미지 사이즈 */
-@media (max-width: 600px) {
-  .post-detail-paper {
-    padding: 1rem;
-    border-radius: 4px;
-  }
-  .post-detail-content img {
-    width: 100%;
-  }
-}
-
-@media (min-width: 601px) {
-  .post-detail-paper {
-    padding: 1.5rem;
-    border-radius: 8px;
-  }
-}
-
-:root {
-  --primary-color: #1976d2;
-}
-
-/* 제목 태그 가독성 향상을 위한 스타일 */
+/* 제목 태그 공통 스타일 */
 .post-detail-content h1,
 .post-detail-content h2,
 .post-detail-content h3,
@@ -107,6 +84,7 @@
   clear: both;
 }
 
+/* 데스크톱 환경의 제목 태그 크기 */
 .post-detail-content h1 {
   font-size: 2.2rem;
   border-bottom: 1px solid #eaecef;
@@ -136,13 +114,23 @@
   color: #666;
 }
 
-/* 문단 간격 조정 */
+/* 이미지 스타일 */
+.post-detail-content img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 1rem auto;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* 문단 스타일 */
 .post-detail-content p {
   margin-bottom: 1rem;
   line-height: 1.6;
 }
 
-/* 코드 블록 스타일 개선 */
+/* 코드 블록 스타일 */
 .post-detail-content pre,
 .post-detail-content code {
   background-color: #f6f8fa;
@@ -157,7 +145,7 @@
   margin: 1rem 0;
 }
 
-/* 목록 스타일 개선 */
+/* 목록 스타일 */
 .post-detail-content ul,
 .post-detail-content ol {
   margin-bottom: 1rem;
@@ -171,12 +159,78 @@
 /* 인용구 스타일 */
 .post-detail-content blockquote {
   border-left: 4px solid var(--primary-color);
+  padding: 1rem;
   padding-left: 1rem;
+  margin: 1rem 0;
   margin-left: 0;
   margin-right: 0;
   color: #555;
   font-style: italic;
   background-color: #f9f9f9;
-  padding: 1rem;
-  margin: 1rem 0;
+}
+
+/* 모바일 환경 스타일 (600px 이하) */
+@media (max-width: 600px) {
+  .post-detail-paper {
+    padding: 1rem;
+    border-radius: 4px;
+  }
+  
+  /* 모바일 환경에서 제목 태그 크기 조정 */
+  .post-detail-content h1 {
+    font-size: 1.5rem;
+  }
+  
+  .post-detail-content h2 {
+    font-size: 1.3rem;
+  }
+  
+  .post-detail-content h3 {
+    font-size: 1.1rem;
+  }
+  
+  .post-detail-content h4 {
+    font-size: 1.1rem;
+  }
+  
+  .post-detail-content h5,
+  .post-detail-content h6 {
+    font-size: 1rem;
+  }
+  
+  /* 모바일 환경에서 본문 텍스트 크기 조정 */
+  .post-detail-content p,
+  .post-detail-content li,
+  .post-detail-content blockquote {
+    font-size: 0.95rem;
+  }
+  
+  /* 모바일 환경에서 코드 블록 크기 조정 */
+  .post-detail-content pre,
+  .post-detail-content code {
+    font-size: 0.9rem;
+  }
+  
+  /* 포스트 제목 크기 조정 */
+  .post-detail-title {
+    font-size: 1.6rem !important;
+  }
+  
+  /* 메타 정보 크기 조정 */
+  .post-detail-meta p {
+    font-size: 0.85rem;
+  }
+  
+  /* 모바일 환경에서 이미지 크기 조정 */
+  .post-detail-content img {
+    width: 100%;
+  }
+}
+
+/* 데스크톱 환경 스타일 (601px 이상) */
+@media (min-width: 601px) {
+  .post-detail-paper {
+    padding: 1.5rem;
+    border-radius: 8px;
+  }
 } 

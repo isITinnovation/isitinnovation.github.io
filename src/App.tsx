@@ -51,7 +51,7 @@ const App = () => {
             <Box
               component="main"
               sx={{
-                paddingX: "2rem",
+                paddingX: "0.5rem",
                 height: "90vh",
                 overflowY: "auto",
                 display: "flex",
