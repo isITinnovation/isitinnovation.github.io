@@ -8,6 +8,7 @@ import TrendingTopics from "./pages/TrendingTopics/index";
 import PromptGuide from "./pages/PromptGuide/index";
 import BlogEditor from "./pages/BlogEditor/index";
 import PostDetailPage from "./pages/PostDetail";
+import CategoryPage from "./pages/Category/index";
 import { theme } from "./styles/theme";
 
 const App = () => {
@@ -34,7 +35,7 @@ const App = () => {
             minHeight: "100vh",
             bgcolor: "background.default",
             display: "flex",
-            paddingTop: "80px", // Header 높이만큼 여백 추가
+            paddingTop: "40px", // Header 높이만큼 여백 추가
           }}
         >
           <Sidebar isOpen={isOpen} setIsOpen={setIsOpen} />
@@ -50,9 +51,8 @@ const App = () => {
             <Box
               component="main"
               sx={{
-                paddingTop: "60px",
                 paddingX: "2rem",
-                height: "100vh",
+                height: "90vh",
                 overflowY: "auto",
                 display: "flex",
                 flexDirection: "column",
@@ -68,6 +68,10 @@ const App = () => {
                 <Route path="/trending" element={<TrendingTopics />} />
                 <Route path="/prompt-guide" element={<PromptGuide />} />
                 <Route path="/write" element={<BlogEditor />} />
+                <Route
+                  path="/category/:categoryName"
+                  element={<CategoryPage />}
+                />
               </Routes>
             </Box>
           </Box>

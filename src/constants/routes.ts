@@ -6,7 +6,7 @@ interface Route {
 
 export const ROUTES: Route[] = [
   {
-    name: "홈",
+    name: "실시간 인기 게시글",
     path: "/isITinnovation",
   },
   {

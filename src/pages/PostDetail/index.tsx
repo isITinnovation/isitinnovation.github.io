@@ -10,11 +10,9 @@ import {
   Skeleton,
 } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import VisibilityIcon from "@mui/icons-material/Visibility";
 import { PostDetail } from "../../types/post";
 import { postService } from "../../services/postService";
 import "./PostDetail.css";
-import SeoAnalyzer from "../../components/SeoAnalyzer";
 
 const PostDetailPage = () => {
   const { id } = useParams();
@@ -61,14 +59,6 @@ const PostDetailPage = () => {
       sx={{ py: { xs: 2, md: 4 }, mt: { xs: -2, md: -4 } }}
     >
       <Box className="post-detail-box">
-        {post && (
-          <SeoAnalyzer
-            title={post.title}
-            content={post.content}
-            category={post.category}
-          />
-        )}
-
         <Paper className="post-detail-paper">
           <Box className="post-detail-header">
             <IconButton
@@ -78,30 +68,45 @@ const PostDetailPage = () => {
               <ArrowBackIcon />
             </IconButton>
 
-            <Chip
-              label={post.category}
-              size="small"
-              className="post-detail-category"
-            />
+            <Box
+              className="post-detail-categories"
+              sx={{
+                display: "flex",
+                flexDirection: "row",
+                flexWrap: "wrap",
+                width: "100%",
+              }}
+            >
+              {post.category.split(",").map((cat, index) => (
+                <Chip
+                  key={index}
+                  label={cat.trim()}
+                  size="small"
+                  className="post-detail-category"
+                  sx={{ margin: "0 0.5rem 0.5rem 0", display: "inline-flex" }}
+                />
+              ))}
+            </Box>
             <Typography variant="h4" className="post-detail-title">
               {post.title}
             </Typography>
 
             <Box className="post-detail-meta">
-              <Typography variant="body2">{post.author}</Typography>
-              <Typography variant="body2">{post.createdAt}</Typography>
-              <Box className="post-detail-views">
+              <p className="post-detail-author">작성자 : {post.author}</p>
+              <p className="post-detail-createdAt">작성일 : {post.createdAt}</p>
+              {/* <Box className="post-detail-views">
                 <VisibilityIcon sx={{ fontSize: 16 }} />
                 <Typography variant="body2">
                   {post.views.toLocaleString()}
                 </Typography>
-              </Box>
+              </Box> */}
             </Box>
           </Box>
 
-          <Typography variant="body1" className="post-detail-content">
-            {post.content}
-          </Typography>
+          <Box
+            className="post-detail-content"
+            dangerouslySetInnerHTML={{ __html: post.content }}
+          />
         </Paper>
       </Box>
     </Container>

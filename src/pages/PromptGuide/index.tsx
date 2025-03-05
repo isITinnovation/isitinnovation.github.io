@@ -108,7 +108,7 @@ const PromptGuide = () => {
             variant="h3"
             sx={{
               fontWeight: 800,
-              textShadow: "0 2px 10px rgba(0, 0, 0, 0.2)",
+              textShadow: "0 2px 10px rgba(150, 49, 222, 0.2)",
             }}
           >
             프롬프트 가이드
@@ -185,7 +185,7 @@ const PromptGuide = () => {
           }}
         >
           <StarIcon sx={{ color: "#E553FF" }} />
-          <Typography variant="h5" fontWeight={700} sx={{ color: "#ffffff" }}>
+          <Typography variant="h5" fontWeight={700} sx={{ color: "#4B0082" }}>
             인기 프롬프트
           </Typography>
         </Box>

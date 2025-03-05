@@ -57,4 +57,17 @@ code {
 
 ::-webkit-scrollbar-thumb:hover {
   background: #33BBCF;
+}
+
+/* 특정 클래스 오버라이드 */
+[class*="css-"] {
+  overflow: visible !important;
+  height: auto !important;
+  min-height: auto !important;
+}
+
+/* 전역 이미지 스타일 */
+img {
+  max-width: 100%;
+  height: auto;
 } 

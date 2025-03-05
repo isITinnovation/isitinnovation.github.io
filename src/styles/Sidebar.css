@@ -11,64 +11,49 @@
 }
 
 .sidebar {
-  width: 250px;
-  height: calc(100vh - 140px); /* 헤더 높이만큼 뺀 높이 */
-  background-color: rgba(10, 15, 41, 0.9);
-  border-right: 1px solid rgba(93, 93, 255, 0.3);
   position: fixed;
+  top: 80px; /* Header 높이에 맞춰 조정 */
   left: 0;
-  top: 140px; /* 헤더 높이만큼 아래로 */
-  z-index: 1000;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  width: 250px;
+  height: calc(100vh - 80px); /* Header 높이를 뺀 나머지 높이 */
+  background-color: rgba(41, 67, 155, 0.85); /* 더 밝은 남색 배경 */
+  backdrop-filter: blur(10px);
+  border-right: 1px solid rgba(100, 149, 237, 0.5); /* 더 밝은 테두리 색상 */
+  box-shadow: 0 0 20px rgba(100, 149, 237, 0.3); /* 더 밝은 그림자 색상 */
   transform: translateX(-100%);
-  box-shadow: 0 0 20px rgba(93, 93, 255, 0.2);
+  transition: transform 0.3s ease;
+  z-index: 1000;
+  overflow-y: auto;
 }
 
 .sidebar.open {
   transform: translateX(0);
-  box-shadow: 
-    0 0 30px rgba(93, 93, 255, 0.4),
-    0 0 60px rgba(51, 187, 207, 0.2),
-    inset 0 0 15px rgba(93, 93, 255, 0.2);
-  border-right: 1px solid rgba(93, 93, 255, 0.5);
-  background: linear-gradient(
-    135deg, 
-    rgba(10, 15, 41, 0.95) 0%, 
-    rgba(26, 27, 70, 0.9) 50%, 
-    rgba(10, 15, 41, 0.95) 100%
-  );
+  box-shadow: 0 5px 20px rgba(100, 149, 237, 0.4); /* 더 밝은 그림자 색상 */
 }
 
 /* 사이드바 오픈 시 우측 테두리 효과 */
 .sidebar.open::after {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   right: 0;
-  width: 2px;
+  width: 3px;
   height: 100%;
   background: linear-gradient(
     to bottom,
-    rgba(93, 93, 255, 0.1) 0%,
-    rgba(93, 93, 255, 0.8) 50%,
-    rgba(51, 187, 207, 0.5) 100%
+    #6495ED, /* 더 밝은 파란색 */
+    #4169E1 /* 로열 블루 */
   );
-  box-shadow: 0 0 15px rgba(93, 93, 255, 0.7);
-  animation: glowPulse 3s infinite alternate;
+  box-shadow: 0 0 15px rgba(100, 149, 237, 0.7); /* 더 밝은 그림자 색상 */
+  animation: glowPulse 2s infinite alternate;
 }
 
 @keyframes glowPulse {
   0% {
-    opacity: 0.5;
-    box-shadow: 0 0 10px rgba(93, 93, 255, 0.5);
-  }
-  50% {
-    opacity: 0.8;
-    box-shadow: 0 0 20px rgba(93, 93, 255, 0.8);
+    box-shadow: 0 0 10px rgba(100, 149, 237, 0.7); /* 더 밝은 그림자 색상 */
   }
   100% {
-    opacity: 0.6;
-    box-shadow: 0 0 15px rgba(51, 187, 207, 0.7);
+    box-shadow: 0 0 20px rgba(100, 149, 237, 0.9); /* 더 밝은 그림자 색상 */
   }
 }
 
@@ -130,110 +115,75 @@
 .sidebar-link {
   display: flex;
   align-items: center;
-  padding: 0.75rem 1rem;
-  color: #b3c7d6;
+  padding: 12px 20px;
+  color: rgba(255, 255, 255, 0.8);
   text-decoration: none;
-  border-radius: 0.5rem;
-  transition: all 0.3s ease;
-  margin-bottom: 0.5rem;
   position: relative;
+  transition: all 0.3s ease;
+  margin-bottom: 5px;
+  border-radius: 8px;
   overflow: hidden;
 }
 
 .sidebar-link::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(93, 93, 255, 0.1),
-    transparent
-  );
-  transition: left 0.5s ease;
-}
-
-.sidebar-link:hover {
-  background-color: rgba(41, 50, 100, 0.3);
-  color: #ffffff;
-  box-shadow: 0 0 10px rgba(41, 50, 100, 0.4);
-  transform: translateX(5px);
-  border-left: 2px solid #293264;
-}
-
-.sidebar-link:hover::before {
-  left: 100%;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(0, 163, 196, 0.2),
-    transparent
-  );
-}
-
-.sidebar-link.active {
-  background: linear-gradient(
-    90deg,
-    rgba(41, 50, 100, 0.5) 0%,
-    rgba(0, 163, 196, 0.4) 50%,
-    rgba(41, 50, 100, 0.5) 100%
-  );
-  color: white;
-  box-shadow: 0 0 15px rgba(0, 163, 196, 0.4);
-  border-left: 3px solid #00A3C4;
-  padding-left: calc(1rem - 3px);
-  position: relative;
-  overflow: hidden;
-}
-
-.sidebar-link.active::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
-  width: 100%;
+  width: 4px;
   height: 100%;
-  background: radial-gradient(
-    circle at 20% 50%,
-    rgba(0, 163, 196, 0.2) 0%,
-    transparent 50%
-  );
-  z-index: -1;
+  background-color: #6495ED; /* 더 밝은 파란색 */
+  transform: scaleY(0);
+  transition: transform 0.3s ease;
+  border-radius: 0 2px 2px 0;
+}
+
+.sidebar-link:hover {
+  color: #ffffff;
+  background-color: rgba(100, 149, 237, 0.2); /* 더 밝은 호버 배경 */
+  box-shadow: 0 0 10px rgba(100, 149, 237, 0.3); /* 더 밝은 그림자 색상 */
+}
+
+.sidebar-link:hover::before {
+  transform: scaleY(1);
+  box-shadow: 0 0 10px rgba(100, 149, 237, 0.5); /* 더 밝은 그림자 색상 */
+}
+
+.sidebar-link.active {
+  color: #ffffff;
+  background-color: rgba(100, 149, 237, 0.3); /* 더 밝은 활성 배경 */
+  box-shadow: 0 0 15px rgba(100, 149, 237, 0.4); /* 더 밝은 그림자 색상 */
+}
+
+.sidebar-link.active::before {
+  transform: scaleY(1);
+  background-color: #6495ED; /* 더 밝은 파란색 */
+  box-shadow: 0 0 10px rgba(100, 149, 237, 0.7); /* 더 밝은 그림자 색상 */
 }
 
 .sidebar-link.active::after {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   right: 0;
-  width: 3px;
+  width: 4px;
   height: 100%;
-  background: linear-gradient(
-    to bottom,
-    #293264,
-    #00A3C4
-  );
-  opacity: 0.8;
+  background-color: #6495ED; /* 더 밝은 파란색 */
+  box-shadow: 0 0 10px rgba(100, 149, 237, 0.7); /* 더 밝은 그림자 색상 */
 }
 
 .sidebar-icon {
-  margin-right: 0.75rem;
-  color: #293264;
-  filter: drop-shadow(0 0 3px rgba(41, 50, 100, 0.5));
-  transition: color 0.3s ease;
+  margin-right: 12px;
+  color: rgba(255, 255, 255, 0.7);
+  transition: all 0.3s ease;
 }
 
 .sidebar-link:hover .sidebar-icon {
-  color: #00A3C4;
-  filter: drop-shadow(0 0 5px rgba(0, 163, 196, 0.7));
+  color: #6495ED; /* 더 밝은 파란색 */
 }
 
 .sidebar-link.active .sidebar-icon {
-  color: #00A3C4;
-  filter: drop-shadow(0 0 5px rgba(0, 163, 196, 0.7));
+  color: #6495ED; /* 더 밝은 파란색 */
 }
 
 .sidebar-text {
@@ -243,9 +193,9 @@
 /* 반응형 스타일 */
 @media (min-width: 769px) {
   .sidebar {
+    width: 250px;
     transform: translateX(-100%);
   }
-
   .sidebar.open {
     transform: translateX(0);
   }
@@ -253,18 +203,18 @@
 
 @media (max-width: 768px) {
   .sidebar {
+    width: 100%;
+    top: 64px; /* 모바일에서 헤더 높이 조정 */
+    height: calc(100vh - 64px); /* 모바일에서 헤더 높이를 뺀 나머지 높이 */
     transform: translateX(-100%);
-    top: 140px;
-    height: calc(100vh - 140px);
-    border-top: 1px solid rgba(93, 93, 255, 0.3);
+    z-index: 1200;
   }
-
   .sidebar.open {
     transform: translateX(0);
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
   }
-
   .sidebar.open + .sidebar-backdrop {
-    display: block;
-    top: 140px;
+    opacity: 1;
+    pointer-events: all;
   }
 } 

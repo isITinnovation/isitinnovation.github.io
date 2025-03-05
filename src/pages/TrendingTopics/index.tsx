@@ -183,7 +183,7 @@ const TrendingTopics = () => {
           }}
         >
           <LocalFireDepartmentIcon sx={{ color: "#33BBCF" }} />
-          <Typography variant="h5" fontWeight={700} sx={{ color: "#ffffff" }}>
+          <Typography variant="h5" fontWeight={700} sx={{ color: "#0047AB" }}>
             실시간 인기 포스트
           </Typography>
         </Box>
