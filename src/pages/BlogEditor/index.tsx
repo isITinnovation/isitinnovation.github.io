@@ -11,6 +11,9 @@ import {
   InputLabel,
   Select,
   MenuItem,
+  Snackbar,
+  Alert,
+  CircularProgress,
 } from "@mui/material";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
@@ -22,7 +25,20 @@ import LinkIcon from "@mui/icons-material/Link";
 import ImageIcon from "@mui/icons-material/Image";
 import CloseIcon from "@mui/icons-material/Close";
 import SeoAnalyzer from "../../components/SeoAnalyzer";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import "./BlogEditor.css";
+
+// 블로그 포스트 타입 정의
+interface BlogPost {
+  id: string;
+  title: string;
+  content: string;
+  tags: string[];
+  category: string;
+  createdAt: string;
+  updatedAt: string;
+}
 
 const BlogEditor = () => {
   const [title, setTitle] = useState("");
@@ -31,6 +47,14 @@ const BlogEditor = () => {
   const [newTag, setNewTag] = useState("");
   const [category, setCategory] = useState("기술");
   const [showSeoAnalyzer, setShowSeoAnalyzer] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    message: "",
+    severity: "success" as "success" | "error" | "info" | "warning",
+  });
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (title.trim() && content.trim() && !showSeoAnalyzer) {
@@ -95,16 +119,67 @@ const BlogEditor = () => {
     "기타",
   ];
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (!title.trim()) {
-      alert("제목을 입력해주세요.");
+      setSnackbar({
+        open: true,
+        message: "제목을 입력해주세요.",
+        severity: "error",
+      });
       return;
     }
     if (!content.trim()) {
-      alert("내용을 입력해주세요.");
+      setSnackbar({
+        open: true,
+        message: "내용을 입력해주세요.",
+        severity: "error",
+      });
       return;
     }
-    console.log({ title, content, tags, category });
+
+    try {
+      setIsLoading(true);
+
+      // 서버리스 함수 호출
+      const response = await axios.post<{
+        success: boolean;
+        message: string;
+        post: BlogPost;
+      }>("/api/saveBlogPost", {
+        title,
+        content,
+        tags,
+        category,
+      });
+
+      if (response.data.success) {
+        setSnackbar({
+          open: true,
+          message: "블로그 포스트가 성공적으로 저장되었습니다.",
+          severity: "success",
+        });
+
+        // 저장 성공 후 포스트 상세 페이지로 이동
+        setTimeout(() => {
+          navigate(`/post/${response.data.post.id}`);
+        }, 1500);
+      } else {
+        throw new Error("저장에 실패했습니다.");
+      }
+    } catch (error) {
+      console.error("블로그 저장 중 오류 발생:", error);
+      setSnackbar({
+        open: true,
+        message: "블로그 저장 중 오류가 발생했습니다.",
+        severity: "error",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleCloseSnackbar = () => {
+    setSnackbar({ ...snackbar, open: false });
   };
 
   return (
@@ -255,11 +330,26 @@ const BlogEditor = () => {
             color="primary"
             size="large"
             onClick={handleSave}
+            disabled={isLoading}
+            startIcon={
+              isLoading && <CircularProgress size={20} color="inherit" />
+            }
           >
-            저장하기
+            {isLoading ? "저장 중..." : "저장하기"}
           </Button>
         </Box>
       </Paper>
+
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={6000}
+        onClose={handleCloseSnackbar}
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+      >
+        <Alert onClose={handleCloseSnackbar} severity={snackbar.severity}>
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
     </Container>
   );
 };

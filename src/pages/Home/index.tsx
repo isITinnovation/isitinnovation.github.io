@@ -7,6 +7,8 @@ import {
   CardContent,
   Chip,
   Button,
+  Alert,
+  CircularProgress,
 } from "@mui/material";
 import TrendingUpIcon from "@mui/icons-material/TrendingUp";
 // import VisibilityIcon from "@mui/icons-material/Visibility";
@@ -16,29 +18,64 @@ import { useState, useEffect } from "react";
 import { Post } from "../../types/post";
 import { postService } from "../../services/postService";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 interface HomeProps {
   searchValue: string;
 }
 
+// 블로그 포스트 타입 정의
+interface BlogPost {
+  id: string;
+  title: string;
+  content: string;
+  tags: string[];
+  category: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
 const Home = ({ searchValue }: HomeProps) => {
   const [trendingTopics, setTrendingTopics] = useState<Post[]>([]);
+  const [blogPosts, setBlogPosts] = useState<BlogPost[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchTrendingPosts = async () => {
+    const fetchPosts = async () => {
+      setIsLoading(true);
+      setError(null);
+
       try {
+        // 서버리스 API에서 블로그 포스트 가져오기
+        try {
+          const response = await axios.get<{
+            success: boolean;
+            posts: BlogPost[];
+          }>("/api/getBlogPosts");
+          if (response.data.success) {
+            setBlogPosts(response.data.posts);
+          }
+        } catch (apiError) {
+          console.log(
+            "서버리스 API에서 포스트를 가져오지 못했습니다. 기존 서비스 사용:",
+            apiError
+          );
+        }
+
+        // 기존 서비스에서 트렌딩 포스트 가져오기
         const posts = await postService.getTrendingPosts();
         setTrendingTopics(posts);
       } catch (error) {
-        console.error("Failed to fetch trending posts:", error);
+        console.error("Failed to fetch posts:", error);
+        setError("포스트를 불러오는 중 오류가 발생했습니다.");
       } finally {
         setIsLoading(false);
       }
     };
 
-    fetchTrendingPosts();
+    fetchPosts();
   }, []);
 
   // 검색어에 따른 필터링된 포스트 목록
@@ -48,9 +85,20 @@ const Home = ({ searchValue }: HomeProps) => {
       post.excerpt.toLowerCase().includes(searchValue.toLowerCase())
   );
 
+  // 검색어에 따른 필터링된 블로그 포스트 목록
+  const filteredBlogPosts = blogPosts.filter(
+    (post) =>
+      post.title.toLowerCase().includes(searchValue.toLowerCase()) ||
+      post.content.toLowerCase().includes(searchValue.toLowerCase()) ||
+      post.tags.some((tag) =>
+        tag.toLowerCase().includes(searchValue.toLowerCase())
+      )
+  );
+
   // 필터링된 포스트에서 카테고리 추출 및 카운트 계산
   const categoryCount: Record<string, number> = {};
 
+  // 기존 포스트의 카테고리 추가
   filteredPosts.forEach((post) => {
     const postCategories = post.category.split(",").map((cat) => cat.trim());
     postCategories.forEach((category) => {
@@ -62,14 +110,51 @@ const Home = ({ searchValue }: HomeProps) => {
     });
   });
 
+  // 블로그 포스트의 카테고리 추가
+  filteredBlogPosts.forEach((post) => {
+    const category = post.category;
+    if (categoryCount[category]) {
+      categoryCount[category] += 1;
+    } else {
+      categoryCount[category] = 1;
+    }
+  });
+
   // 카테고리 배열로 변환
   const categories = Object.entries(categoryCount)
     .map(([name, count]) => ({ name, count }))
     .sort((a, b) => b.count - a.count); // 카운트 기준 내림차순 정렬
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "50vh",
+        }}
+      >
+        <CircularProgress />
+      </Box>
+    );
   }
+
+  if (error) {
+    return (
+      <Container maxWidth="lg">
+        <Alert severity="error" sx={{ mt: 4 }}>
+          {error}
+        </Alert>
+      </Container>
+    );
+  }
+
+  // 블로그 포스트의 내용 일부만 표시하는 함수
+  const getExcerpt = (content: string, maxLength: number = 150) => {
+    if (content.length <= maxLength) return content;
+    return content.substring(0, maxLength) + "...";
+  };
 
   return (
     <Container maxWidth="lg" sx={{ mb: 8 }}>
@@ -103,20 +188,98 @@ const Home = ({ searchValue }: HomeProps) => {
             </Typography>
             {searchValue && (
               <Typography variant="body2" color="grey.600">
-                ({filteredPosts.length}개의 게시글)
+                ({filteredPosts.length + filteredBlogPosts.length}개의 게시글)
               </Typography>
             )}
           </Box>
 
-          {filteredPosts.length === 0 && searchValue && (
-            <Box sx={{ textAlign: "center", py: 4 }}>
-              <Typography variant="body1" color="text.secondary">
-                검색 결과가 없습니다.
-              </Typography>
-            </Box>
-          )}
+          {filteredPosts.length === 0 &&
+            filteredBlogPosts.length === 0 &&
+            searchValue && (
+              <Box sx={{ textAlign: "center", py: 4 }}>
+                <Typography variant="body1" color="text.secondary">
+                  검색 결과가 없습니다.
+                </Typography>
+              </Box>
+            )}
 
           <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+            {/* 서버리스 API에서 가져온 블로그 포스트 */}
+            {filteredBlogPosts.map((post) => (
+              <Card
+                key={post.id}
+                onClick={() => navigate(`/post/${post.id}`)}
+                sx={{
+                  borderRadius: 2,
+                  transition: "transform 0.2s",
+                  cursor: "pointer",
+                  "&:hover": {
+                    transform: "translateY(-2px)",
+                    boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+                  },
+                }}
+              >
+                <CardContent sx={{ p: 3 }}>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      mb: 1,
+                    }}
+                  >
+                    <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
+                      <Chip
+                        label={post.category}
+                        size="small"
+                        color="primary"
+                        sx={{ borderRadius: "4px" }}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          navigate(
+                            `/category/${encodeURIComponent(post.category)}`
+                          );
+                        }}
+                      />
+                    </Box>
+                    <Typography variant="body2" color="text.secondary">
+                      {new Date(post.createdAt).toLocaleDateString("ko-KR")}
+                    </Typography>
+                  </Box>
+                  <Typography
+                    variant="h6"
+                    sx={{ fontWeight: 600, mb: 1 }}
+                    color="primary.dark"
+                  >
+                    {post.title}
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    {getExcerpt(post.content)}
+                  </Typography>
+                  {post.tags.length > 0 && (
+                    <Box
+                      sx={{
+                        display: "flex",
+                        flexWrap: "wrap",
+                        gap: 0.5,
+                        mt: 2,
+                      }}
+                    >
+                      {post.tags.map((tag, index) => (
+                        <Chip
+                          key={index}
+                          label={tag}
+                          size="small"
+                          variant="outlined"
+                          sx={{ borderRadius: "4px" }}
+                        />
+                      ))}
+                    </Box>
+                  )}
+                </CardContent>
+              </Card>
+            ))}
+
+            {/* 기존 서비스에서 가져온 포스트 */}
             {filteredPosts.map((topic) => (
               <Card
                 key={topic.id}
@@ -148,7 +311,7 @@ const Home = ({ searchValue }: HomeProps) => {
                           color="primary"
                           sx={{ borderRadius: "4px" }}
                           onClick={(e) => {
-                            e.stopPropagation(); // 부모 요소의 클릭 이벤트 전파 방지
+                            e.stopPropagation();
                             navigate(
                               `/category/${encodeURIComponent(cat.trim())}`
                             );
