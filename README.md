@@ -11,6 +11,28 @@ IT 트렌드 블로그 프로젝트입니다.
 - Vercel 서버리스 함수
 - MySQL 데이터베이스
 
+## 프로젝트 구조
+
+```
+isitBlog/
+├── src/                  # 소스 코드
+│   ├── assets/           # 이미지, 폰트 등 정적 파일
+│   ├── components/       # 재사용 가능한 컴포넌트
+│   ├── constants/        # 상수 정의
+│   ├── data/             # 정적 데이터
+│   ├── pages/            # 페이지 컴포넌트
+│   ├── services/         # API 서비스
+│   ├── styles/           # 스타일 관련 파일
+│   ├── types/            # TypeScript 타입 정의
+│   ├── utils/            # 유틸리티 함수
+│   ├── App.tsx           # 앱 루트 컴포넌트
+│   ├── index.css         # 글로벌 CSS
+│   └── main.tsx          # 앱 진입점
+├── api/                  # Vercel 서버리스 함수
+├── scripts/              # 유틸리티 스크립트
+└── dist/                 # 빌드 결과물
+```
+
 ## 개발 환경 설정
 
 1. 저장소 클론
