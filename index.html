@@ -8,6 +8,22 @@
       rel="stylesheet"
     />
     <title>IT 트렌드 블로그</title>
+    <!-- GitHub Pages SPA 리다이렉트 처리 -->
+    <script type="text/javascript">
+      // GitHub Pages에서 SPA 라우팅을 위한 리다이렉트 처리
+      (function() {
+        // 로컬 또는 Vercel 환경에서는 실행하지 않음
+        if (window.location.hostname === 'localhost' || window.location.hostname.includes('vercel.app')) {
+          return;
+        }
+        
+        var redirect = sessionStorage.redirect;
+        delete sessionStorage.redirect;
+        if (redirect && redirect !== window.location.href) {
+          history.replaceState(null, null, redirect);
+        }
+      })();
+    </script>
     <!-- MIME 타입 명시적 설정 -->
     <script type="module" src="/src/main.tsx"></script>
   </head>

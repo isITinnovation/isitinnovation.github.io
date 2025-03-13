@@ -11,6 +11,19 @@ import PostDetailPage from "./pages/PostDetail";
 import CategoryPage from "./pages/Category/index";
 import { theme } from "./styles/theme";
 
+// 배포 환경에 따라 basename 설정
+const getBasename = () => {
+  // Vercel 환경이거나 로컬 개발 환경인 경우
+  if (
+    window.location.hostname.includes("vercel.app") ||
+    window.location.hostname === "localhost"
+  ) {
+    return "/";
+  }
+  // GitHub Pages인 경우
+  return "/";
+};
+
 const App = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const [isOpen, setIsOpen] = useState(!isMobile); // 모바일이 아니면 true, 모바일이면 false
@@ -23,7 +36,7 @@ const App = () => {
 
   return (
     <ThemeProvider theme={theme}>
-      <BrowserRouter basename="/">
+      <BrowserRouter basename={getBasename()}>
         <Header
           isOpen={isOpen}
           setIsOpen={setIsOpen}
