@@ -14,7 +14,7 @@ export default async function handler(
   }
 
   try {
-    // 인증 토큰 확인
+    // 인증 토큰 확인 //
     const authHeader = request.headers.authorization;
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
       return response.status(200).json({
