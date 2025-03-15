@@ -16,6 +16,12 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  useMediaQuery,
+  useTheme,
+  List,
+  ListItem,
+  ListItemText,
+  Divider,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import TrendingUpIcon from "@mui/icons-material/TrendingUp";
@@ -26,6 +32,9 @@ import { useState } from "react";
 
 const StockInfo = () => {
   const [searchValue, setSearchValue] = useState("");
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+  const isSmallMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   // 주식 카테고리
   const stockCategories = [
@@ -166,7 +175,7 @@ const StockInfo = () => {
       {/* 메인 배너 */}
       <Paper
         sx={{
-          p: 4,
+          p: { xs: 3, md: 4 },
           mb: 4,
           borderRadius: 3,
           background: "#FFFFFF",
@@ -182,7 +191,7 @@ const StockInfo = () => {
       >
         <Box sx={{ position: "relative", zIndex: 2 }}>
           <Typography
-            variant="h3"
+            variant={isMobile ? "h4" : "h3"}
             sx={{
               fontWeight: 800,
               color: "#000000",
@@ -190,18 +199,27 @@ const StockInfo = () => {
           >
             주식 정보 센터
           </Typography>
-          <Typography variant="h6" sx={{ opacity: 0.7, color: "#333333" }}>
+          <Typography
+            variant={isMobile ? "subtitle1" : "h6"}
+            sx={{
+              opacity: 0.7,
+              color: "#333333",
+              fontSize: { xs: "0.9rem", sm: "1rem", md: "1.25rem" },
+            }}
+          >
             국내외 주요 주식 정보와 최신 시장 동향을 확인하세요
           </Typography>
           <TextField
             fullWidth
             variant="outlined"
-            placeholder="관심있는 주식이나 티커를 검색해보세요"
+            placeholder={
+              isMobile ? "주식 검색" : "관심있는 주식이나 티커를 검색해보세요"
+            }
             value={searchValue}
             onChange={(e) => setSearchValue(e.target.value)}
             sx={{
               mt: 2,
-              maxWidth: 500,
+              maxWidth: { xs: "100%", sm: 500 },
               "& .MuiOutlinedInput-root": {
                 bgcolor: "#FFFFFF",
                 borderRadius: 2,
@@ -225,31 +243,32 @@ const StockInfo = () => {
       </Paper>
 
       {/* 카테고리 필터 */}
-      <Box sx={{ mb: 4, display: "flex", gap: 1, flexWrap: "wrap" }}>
+      <Box
+        sx={{
+          mb: 4,
+          display: "flex",
+          gap: 1,
+          flexWrap: "wrap",
+          justifyContent: isMobile ? "center" : "flex-start",
+        }}
+      >
         {stockCategories.map((category) => (
           <Button
             key={category}
             variant={category === "전체" ? "contained" : "outlined"}
+            size={isMobile ? "small" : "medium"}
             sx={{
               borderRadius: "20px",
-              px: 2,
+              px: { xs: 1.5, md: 2 },
               py: 0.5,
-              color:
-                category === "전체" ? "white" : getColorForCategory(category),
-              borderColor:
-                category !== "전체"
-                  ? getColorForCategory(category)
-                  : "transparent",
-              backgroundColor:
-                category === "전체"
-                  ? getColorForCategory(category)
-                  : "transparent",
+              fontSize: { xs: "0.75rem", md: "0.875rem" },
+              color: category === "전체" ? "white" : "#333333",
+              borderColor: category !== "전체" ? "#DDDDDD" : "transparent",
+              backgroundColor: category === "전체" ? "#333333" : "transparent",
               "&:hover": {
                 bgcolor:
-                  category === "전체"
-                    ? getColorForCategory(category)
-                    : `${getColorForCategory(category)}20`,
-                boxShadow: `0 0 10px ${getColorForCategory(category)}40`,
+                  category === "전체" ? "#555555" : "rgba(0, 0, 0, 0.05)",
+                boxShadow: "0 0 10px rgba(0, 0, 0, 0.1)",
               },
             }}
           >
@@ -258,7 +277,7 @@ const StockInfo = () => {
         ))}
       </Box>
 
-      {/* 주식 정보 테이블 */}
+      {/* 주식 정보 테이블 / 모바일에서는 리스트 */}
       <Box sx={{ mb: 4 }}>
         <Box
           sx={{
@@ -269,78 +288,187 @@ const StockInfo = () => {
           }}
         >
           <ShowChartIcon sx={{ color: "#000000" }} />
-          <Typography variant="h5" fontWeight={700} sx={{ color: "#000000" }}>
+          <Typography
+            variant={isMobile ? "h6" : "h5"}
+            fontWeight={700}
+            sx={{ color: "#000000" }}
+          >
             주요 종목 정보
           </Typography>
         </Box>
 
-        <TableContainer
-          component={Paper}
-          sx={{ borderRadius: 2, boxShadow: "0 2px 8px rgba(0,0,0,0.1)" }}
-        >
-          <Table>
-            <TableHead>
-              <TableRow sx={{ backgroundColor: "#f5f5f5" }}>
-                <TableCell sx={{ fontWeight: 700 }}>종목명</TableCell>
-                <TableCell sx={{ fontWeight: 700 }}>티커</TableCell>
-                <TableCell sx={{ fontWeight: 700 }}>현재가</TableCell>
-                <TableCell sx={{ fontWeight: 700 }}>등락률</TableCell>
-                <TableCell sx={{ fontWeight: 700 }}>거래량</TableCell>
-                <TableCell sx={{ fontWeight: 700 }}>시가총액</TableCell>
-                <TableCell sx={{ fontWeight: 700 }}>섹터</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {filteredStocks.map((stock) => (
-                <TableRow key={stock.id} hover>
-                  <TableCell sx={{ fontWeight: 600 }}>{stock.name}</TableCell>
-                  <TableCell>{stock.ticker}</TableCell>
-                  <TableCell>
-                    {typeof stock.price === "number"
-                      ? stock.price.toLocaleString()
-                      : stock.price}
-                  </TableCell>
-                  <TableCell>
-                    <Box
-                      sx={{
-                        display: "flex",
-                        alignItems: "center",
-                        color:
-                          stock.change > 0
-                            ? "#FF0000"
-                            : stock.change < 0
-                            ? "#0000FF"
-                            : "inherit",
-                      }}
-                    >
-                      {stock.change > 0 ? (
-                        <TrendingUpIcon fontSize="small" sx={{ mr: 0.5 }} />
-                      ) : stock.change < 0 ? (
-                        <TrendingDownIcon fontSize="small" sx={{ mr: 0.5 }} />
-                      ) : null}
-                      {stock.change > 0 ? "+" : ""}
-                      {stock.change}%
+        {!isMobile ? (
+          <TableContainer
+            component={Paper}
+            sx={{ borderRadius: 2, boxShadow: "0 2px 8px rgba(0,0,0,0.1)" }}
+          >
+            <Table>
+              <TableHead>
+                <TableRow sx={{ backgroundColor: "#f5f5f5" }}>
+                  <TableCell sx={{ fontWeight: 700 }}>종목명</TableCell>
+                  <TableCell sx={{ fontWeight: 700 }}>티커</TableCell>
+                  <TableCell sx={{ fontWeight: 700 }}>현재가</TableCell>
+                  <TableCell sx={{ fontWeight: 700 }}>등락률</TableCell>
+                  <TableCell sx={{ fontWeight: 700 }}>거래량</TableCell>
+                  <TableCell sx={{ fontWeight: 700 }}>시가총액</TableCell>
+                  <TableCell sx={{ fontWeight: 700 }}>섹터</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {filteredStocks.map((stock) => (
+                  <TableRow key={stock.id} hover>
+                    <TableCell sx={{ fontWeight: 600 }}>{stock.name}</TableCell>
+                    <TableCell>{stock.ticker}</TableCell>
+                    <TableCell>
+                      {typeof stock.price === "number"
+                        ? stock.price.toLocaleString()
+                        : stock.price}
+                    </TableCell>
+                    <TableCell>
+                      <Box
+                        sx={{
+                          display: "flex",
+                          alignItems: "center",
+                          color:
+                            stock.change > 0
+                              ? "#FF0000"
+                              : stock.change < 0
+                              ? "#0000FF"
+                              : "inherit",
+                        }}
+                      >
+                        {stock.change > 0 ? (
+                          <TrendingUpIcon fontSize="small" sx={{ mr: 0.5 }} />
+                        ) : stock.change < 0 ? (
+                          <TrendingDownIcon fontSize="small" sx={{ mr: 0.5 }} />
+                        ) : null}
+                        {stock.change > 0 ? "+" : ""}
+                        {stock.change}%
+                      </Box>
+                    </TableCell>
+                    <TableCell>{stock.volume.toLocaleString()}</TableCell>
+                    <TableCell>{stock.marketCap}</TableCell>
+                    <TableCell>
+                      <Chip
+                        label={stock.sector}
+                        size="small"
+                        sx={{
+                          borderRadius: "4px",
+                          bgcolor: "#333333",
+                          color: "#FFFFFF",
+                          fontWeight: 500,
+                        }}
+                      />
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        ) : (
+          // 모바일 뷰에서는 카드 형태로 표시
+          <Box>
+            {filteredStocks.map((stock) => (
+              <Card
+                key={stock.id}
+                sx={{
+                  mb: 2,
+                  borderRadius: 2,
+                  boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+                  border: "1px solid #EEEEEE",
+                }}
+              >
+                <CardContent sx={{ p: 2 }}>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "flex-start",
+                      mb: 1,
+                    }}
+                  >
+                    <Box>
+                      <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                        {stock.name}
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        {stock.ticker}
+                      </Typography>
                     </Box>
-                  </TableCell>
-                  <TableCell>{stock.volume.toLocaleString()}</TableCell>
-                  <TableCell>{stock.marketCap}</TableCell>
-                  <TableCell>
                     <Chip
                       label={stock.sector}
                       size="small"
                       sx={{
                         borderRadius: "4px",
-                        bgcolor: getColorForCategory(stock.category),
+                        bgcolor: "#333333",
                         color: "#FFFFFF",
                         fontWeight: 500,
                       }}
                     />
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
+                  </Box>
+
+                  <Divider sx={{ my: 1 }} />
+
+                  <Grid container spacing={1} sx={{ mt: 1 }}>
+                    <Grid item xs={6}>
+                      <Typography variant="body2" color="text.secondary">
+                        현재가
+                      </Typography>
+                      <Typography variant="body1" fontWeight={500}>
+                        {typeof stock.price === "number"
+                          ? stock.price.toLocaleString()
+                          : stock.price}
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={6}>
+                      <Typography variant="body2" color="text.secondary">
+                        등락률
+                      </Typography>
+                      <Box
+                        sx={{
+                          display: "flex",
+                          alignItems: "center",
+                          color:
+                            stock.change > 0
+                              ? "#FF0000"
+                              : stock.change < 0
+                              ? "#0000FF"
+                              : "inherit",
+                        }}
+                      >
+                        {stock.change > 0 ? (
+                          <TrendingUpIcon fontSize="small" sx={{ mr: 0.5 }} />
+                        ) : stock.change < 0 ? (
+                          <TrendingDownIcon fontSize="small" sx={{ mr: 0.5 }} />
+                        ) : null}
+                        <Typography variant="body1" fontWeight={500}>
+                          {stock.change > 0 ? "+" : ""}
+                          {stock.change}%
+                        </Typography>
+                      </Box>
+                    </Grid>
+                    <Grid item xs={6}>
+                      <Typography variant="body2" color="text.secondary">
+                        거래량
+                      </Typography>
+                      <Typography variant="body1" fontWeight={500}>
+                        {stock.volume.toLocaleString()}
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={6}>
+                      <Typography variant="body2" color="text.secondary">
+                        시가총액
+                      </Typography>
+                      <Typography variant="body1" fontWeight={500}>
+                        {stock.marketCap}
+                      </Typography>
+                    </Grid>
+                  </Grid>
+                </CardContent>
+              </Card>
+            ))}
+          </Box>
+        )}
       </Box>
 
       {/* 주식 뉴스 */}
@@ -354,12 +482,16 @@ const StockInfo = () => {
           }}
         >
           <AttachMoneyIcon sx={{ color: "#000000" }} />
-          <Typography variant="h5" fontWeight={700} sx={{ color: "#000000" }}>
+          <Typography
+            variant={isMobile ? "h6" : "h5"}
+            fontWeight={700}
+            sx={{ color: "#000000" }}
+          >
             최신 주식 뉴스
           </Typography>
         </Box>
 
-        <Grid container spacing={3}>
+        <Grid container spacing={isMobile ? 2 : 3}>
           {stockNews.map((news) => (
             <Grid item xs={12} key={news.id}>
               <Card
@@ -370,13 +502,13 @@ const StockInfo = () => {
                   backdropFilter: "blur(5px)",
                   border: "1px solid rgba(0, 0, 0, 0.1)",
                   "&:hover": {
-                    transform: "translateX(4px)",
+                    transform: isMobile ? "none" : "translateX(4px)",
                     boxShadow: "0 4px 20px rgba(0, 0, 0, 0.1)",
                     borderColor: "rgba(0, 0, 0, 0.2)",
                   },
                 }}
               >
-                <CardContent sx={{ p: 3 }}>
+                <CardContent sx={{ p: isMobile ? 2 : 3 }}>
                   <Box sx={{ display: "flex", gap: 2 }}>
                     <Box sx={{ flex: 1 }}>
                       <Box
@@ -395,14 +527,24 @@ const StockInfo = () => {
                         </Typography>
                       </Box>
                       <Typography
-                        variant="h6"
+                        variant={isMobile ? "subtitle1" : "h6"}
                         sx={{ fontWeight: 600, mb: 1, color: "#333333" }}
                       >
                         {news.title}
                       </Typography>
                       <Typography
                         variant="body2"
-                        sx={{ mb: 2, color: "rgba(0, 0, 0, 0.7)" }}
+                        sx={{
+                          mb: 2,
+                          color: "rgba(0, 0, 0, 0.7)",
+                          display: isSmallMobile ? "-webkit-box" : "block",
+                          WebkitLineClamp: isSmallMobile ? 3 : undefined,
+                          WebkitBoxOrient: isSmallMobile
+                            ? "vertical"
+                            : undefined,
+                          overflow: isSmallMobile ? "hidden" : "visible",
+                          textOverflow: isSmallMobile ? "ellipsis" : "clip",
+                        }}
                       >
                         {news.excerpt}
                       </Typography>
@@ -414,7 +556,7 @@ const StockInfo = () => {
                             size="small"
                             sx={{
                               borderRadius: "4px",
-                              bgcolor: stockColors[index % stockColors.length],
+                              bgcolor: "#333333",
                               color: "#FFFFFF",
                               fontWeight: 500,
                               "&:hover": {
