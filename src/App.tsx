@@ -9,6 +9,10 @@ import PromptGuide from "./pages/PromptGuide/index";
 import BlogEditor from "./pages/BlogEditor/index";
 import PostDetailPage from "./pages/PostDetail";
 import CategoryPage from "./pages/Category/index";
+import Login from "./pages/Login/index";
+import Register from "./pages/Register/index";
+import Profile from "./pages/Profile/index";
+import ProtectedRoute from "./components/ProtectedRoute";
 import { theme } from "./styles/theme";
 
 // 배포 환경에 따라 basename 설정
@@ -80,11 +84,28 @@ const App = () => {
                 <Route path="/post/:id" element={<PostDetailPage />} />
                 <Route path="/trending" element={<TrendingTopics />} />
                 <Route path="/prompt-guide" element={<PromptGuide />} />
-                <Route path="/write" element={<BlogEditor />} />
+                <Route
+                  path="/write"
+                  element={
+                    <ProtectedRoute>
+                      <BlogEditor />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/profile"
+                  element={
+                    <ProtectedRoute>
+                      <Profile />
+                    </ProtectedRoute>
+                  }
+                />
                 <Route
                   path="/category/:categoryName"
                   element={<CategoryPage />}
                 />
+                <Route path="/login" element={<Login />} />
+                <Route path="/register" element={<Register />} />
               </Routes>
             </Box>
           </Box>

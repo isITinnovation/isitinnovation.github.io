@@ -1,0 +1,62 @@
+.container {
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+}
+
+.paper {
+  padding: 2rem;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  margin-bottom: 1rem;
+}
+
+.userInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.userName {
+  font-weight: 700;
+  color: #1A237E;
+}
+
+.userEmail {
+  color: #666;
+}
+
+.section {
+  margin: 2rem 0;
+}
+
+.sectionTitle {
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  color: #1A237E;
+}
+
+.form {
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+@media (max-width: 600px) {
+  .header {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .userInfo {
+    align-items: center;
+  }
+  
+  .paper {
+    padding: 1.5rem;
+  }
+} 
