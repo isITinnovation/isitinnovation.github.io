@@ -182,7 +182,7 @@
 
 @media (max-width: 768px) {
   .sidebar {
-    width: 100%;
+    width: 70%;
     top: 64px; /* 모바일에서 헤더 높이 조정 */
     height: calc(100vh - 64px); /* 모바일에서 헤더 높이를 뺀 나머지 높이 */
     transform: translateX(-100%);

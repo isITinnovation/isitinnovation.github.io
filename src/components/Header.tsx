@@ -170,7 +170,7 @@ const Header = ({
 
           {isMobile ? (
             <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
-              <IconButton sx={{ color: "#5D5DFF" }} onClick={handleSearchOpen}>
+              <IconButton sx={{ color: "#000000" }} onClick={handleSearchOpen}>
                 <SearchIcon />
               </IconButton>
             </Box>
@@ -313,11 +313,17 @@ const Header = ({
                       navigate("/profile");
                     }}
                   >
-                    <AccountCircleIcon fontSize="small" sx={{ mr: 1, color: "#000000" }} />
+                    <AccountCircleIcon
+                      fontSize="small"
+                      sx={{ mr: 1, color: "#000000" }}
+                    />
                     프로필
                   </MenuItem>
                   <MenuItem onClick={handleLogout}>
-                    <LogoutIcon fontSize="small" sx={{ mr: 1, color: "#000000" }} />
+                    <LogoutIcon
+                      fontSize="small"
+                      sx={{ mr: 1, color: "#000000" }}
+                    />
                     로그아웃
                   </MenuItem>
                 </Menu>
