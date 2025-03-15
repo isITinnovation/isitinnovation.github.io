@@ -46,7 +46,7 @@ export default async function handler(
         id: row.id,
         title: row.title,
         content: row.content,
-        tags: JSON.parse(row.tags || "[]"),
+        tags: parseTags(row.tags),
         category: row.category,
         createdAt: row.created_at,
         updatedAt: row.updated_at,
@@ -67,5 +67,18 @@ export default async function handler(
       error: "서버 오류가 발생했습니다.",
       details: error instanceof Error ? error.message : "알 수 없는 오류",
     });
+  }
+}
+
+// 태그 파싱 함수
+function parseTags(tagsJson: any): string[] {
+  if (!tagsJson) return [];
+
+  try {
+    const parsed = JSON.parse(tagsJson);
+    return Array.isArray(parsed) ? parsed : [];
+  } catch (error) {
+    console.error("태그 파싱 중 오류 발생:", error);
+    return [];
   }
 }
