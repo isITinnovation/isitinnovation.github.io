@@ -18,9 +18,6 @@ import {
   TableRow,
   useMediaQuery,
   useTheme,
-  List,
-  ListItem,
-  ListItemText,
   Divider,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
@@ -45,14 +42,6 @@ const StockInfo = () => {
     "금융",
     "에너지",
     "헬스케어",
-  ];
-
-  // 주식 색상 (Home/index.tsx의 색상 스타일 적용)
-  const stockColors = [
-    "#7D7D7D", // 문빔 그레이
-    "#9370DB", // 디지털 라벤더
-    "#3EB489", // 네오 민트
-    "#A47551", // 모카무스
   ];
 
   // 주식 정보 데이터
@@ -155,12 +144,6 @@ const StockInfo = () => {
       relatedStocks: ["KB금융", "신한지주"],
     },
   ];
-
-  // 카테고리별 색상 가져오기
-  const getColorForCategory = (category: string) => {
-    const index = stockCategories.indexOf(category) % stockColors.length;
-    return stockColors[index];
-  };
 
   // 검색 필터링
   const filteredStocks = stockData.filter(
