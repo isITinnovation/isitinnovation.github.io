@@ -1,6 +1,5 @@
 import styled from "styled-components";
 import { Paper } from "@mui/material";
-import { theme } from "../../styles/theme";
 
 export const TrendingCard = styled(Paper)`
   padding: 1.5rem;

@@ -1,5 +1,4 @@
 import { Box, Typography } from "@mui/material";
-import CodeIcon from "@mui/icons-material/Code";
 
 const Logo = () => {
   return (
