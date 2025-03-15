@@ -34,7 +34,9 @@ export default async function handler(
 
     // 새 블로그 포스트 객체 생성
     const postId = uuidv4();
-    const now = new Date().toISOString();
+    // MySQL이 이해할 수 있는 날짜 형식으로 변환
+    const now = new Date();
+    const formattedDate = now.toISOString().slice(0, 19).replace("T", " ");
     const tagsString = JSON.stringify(tags || []);
 
     // MySQL에 저장
@@ -58,7 +60,15 @@ export default async function handler(
       const [result] = await connection.query(
         `INSERT INTO blog_posts (id, title, content, tags, category, created_at, updated_at) 
          VALUES (?, ?, ?, ?, ?, ?, ?)`,
-        [postId, title, content, tagsString, category, now, now]
+        [
+          postId,
+          title,
+          content,
+          tagsString,
+          category,
+          formattedDate,
+          formattedDate,
+        ]
       );
 
       // 저장된 포스트 조회
