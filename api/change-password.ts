@@ -1,5 +1,5 @@
 import { VercelRequest, VercelResponse } from "@vercel/node";
-import pool from "./utils/mysql";
+import pool from "./utils/mysql.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 

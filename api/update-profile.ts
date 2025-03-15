@@ -1,6 +1,6 @@
 import { VercelRequest, VercelResponse } from "@vercel/node";
 import jwt from "jsonwebtoken";
-import mysql from "mysql2/promise";
+import pool from "./utils/mysql.js";
 
 export default async function handler(
   request: VercelRequest,
@@ -58,67 +58,46 @@ export default async function handler(
     });
   }
 
-  // 데이터베이스 연결
-  const pool = mysql.createPool({
-    host: process.env.DB_HOST,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME,
-    port: parseInt(process.env.DB_PORT || "3306"),
-    waitForConnections: true,
-    connectionLimit: 10,
-    queueLimit: 0,
-  });
+  const connection = await pool.getConnection();
 
   try {
-    const connection = await pool.getConnection();
+    // 사용자 정보 업데이트
+    const [result] = await connection.execute(
+      "UPDATE users SET name = ? WHERE id = ?",
+      [name, userId]
+    );
 
-    try {
-      // 사용자 정보 업데이트
-      const [result] = await connection.execute(
-        "UPDATE users SET name = ? WHERE id = ?",
-        [name, userId]
-      );
+    // 업데이트된 사용자 정보 조회
+    const [rows] = await connection.execute(
+      "SELECT id, name, email FROM users WHERE id = ?",
+      [userId]
+    );
 
-      // 업데이트된 사용자 정보 조회
-      const [rows] = await connection.execute(
-        "SELECT id, name, email FROM users WHERE id = ?",
-        [userId]
-      );
+    connection.release();
 
-      connection.release();
+    if (Array.isArray(rows) && rows.length > 0) {
+      const user = rows[0] as { id: string; name: string; email: string };
 
-      if (Array.isArray(rows) && rows.length > 0) {
-        const user = rows[0] as { id: string; name: string; email: string };
-
-        return response.status(200).json({
-          success: true,
-          message: "프로필이 성공적으로 업데이트되었습니다.",
-          user: {
-            id: user.id,
-            name: user.name,
-            email: user.email,
-          },
-        });
-      } else {
-        return response.status(404).json({
-          success: false,
-          message: "사용자를 찾을 수 없습니다.",
-        });
-      }
-    } catch (error) {
-      console.error("프로필 업데이트 중 데이터베이스 오류:", error);
-      return response.status(500).json({
+      return response.status(200).json({
+        success: true,
+        message: "프로필이 성공적으로 업데이트되었습니다.",
+        user: {
+          id: user.id,
+          name: user.name,
+          email: user.email,
+        },
+      });
+    } else {
+      return response.status(404).json({
         success: false,
-        message: "프로필 업데이트 중 오류가 발생했습니다.",
-        details: error instanceof Error ? error.message : "알 수 없는 오류",
+        message: "사용자를 찾을 수 없습니다.",
       });
     }
   } catch (error) {
-    console.error("데이터베이스 연결 오류:", error);
+    console.error("프로필 업데이트 중 데이터베이스 오류:", error);
     return response.status(500).json({
       success: false,
-      message: "데이터베이스 연결에 실패했습니다.",
+      message: "프로필 업데이트 중 오류가 발생했습니다.",
       details: error instanceof Error ? error.message : "알 수 없는 오류",
     });
   }

@@ -1,5 +1,5 @@
 import { VercelRequest, VercelResponse } from "@vercel/node";
-import pool from "./utils/mysql";
+import pool from "./utils/mysql.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
@@ -40,6 +40,36 @@ export default async function handler(
     const connection = await pool.getConnection();
 
     try {
+      // 테이블이 존재하는지 확인
+      try {
+        // 테이블 존재 여부 확인
+        const [tables] = await connection.query("SHOW TABLES LIKE 'users'");
+
+        // 테이블이 없으면 생성
+        if ((tables as any[]).length === 0) {
+          console.log(
+            "users 테이블이 존재하지 않습니다. 테이블을 생성합니다..."
+          );
+
+          await connection.query(`
+            CREATE TABLE users (
+              id VARCHAR(36) PRIMARY KEY,
+              name VARCHAR(100) NOT NULL,
+              email VARCHAR(100) NOT NULL UNIQUE,
+              password VARCHAR(255) NOT NULL,
+              created_at DATETIME NOT NULL,
+              updated_at DATETIME NOT NULL,
+              INDEX idx_email (email)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+          `);
+
+          console.log("users 테이블이 성공적으로 생성되었습니다.");
+        }
+      } catch (tableError) {
+        console.error("테이블 확인/생성 중 오류 발생:", tableError);
+        // 테이블 생성 오류는 무시하고 계속 진행 (이미 존재할 수 있음)
+      }
+
       // 사용자 조회
       const [users] = await connection.query(
         "SELECT * FROM users WHERE email = ?",
