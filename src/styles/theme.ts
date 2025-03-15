@@ -3,22 +3,22 @@ import { createTheme } from "@mui/material/styles";
 export const theme = createTheme({
   palette: {
     primary: {
-      main: "#4169E1",
-      light: "#6495ED",
-      dark: "#1E3A8A",
+      main: "#000000",
+      light: "#333333",
+      dark: "#000000",
     },
     secondary: {
-      main: "#5F9EA0",
-      light: "#87CEEB",
-      dark: "#4682B4",
+      main: "#666666",
+      light: "#999999",
+      dark: "#333333",
     },
     background: {
-      default: "#F0F8FF",
-      paper: "#E6F0FF",
+      default: "#ffffff",
+      paper: "#fafafa",
     },
     text: {
-      primary: "#1A237E",
-      secondary: "#3F51B5",
+      primary: "#000000",
+      secondary: "#666666",
     },
   },
   typography: {
@@ -42,14 +42,14 @@ export const theme = createTheme({
     MuiAppBar: {
       styleOverrides: {
         root: {
-          backgroundColor: "rgba(65, 105, 225, 0.85)",
+          backgroundColor: "rgba(0, 0, 0, 0.85)",
         },
       },
     },
     MuiPaper: {
       styleOverrides: {
         root: {
-          backgroundColor: "#F8FBFF",
+          backgroundColor: "#ffffff",
         },
       },
     },

@@ -10,22 +10,6 @@ const Logo = () => {
         gap: 1,
       }}
     >
-      <Box
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          bgcolor: "primary.main",
-          borderRadius: "12px",
-          width: 40,
-          height: 40,
-          color: "white",
-          transform: "rotate(-10deg)",
-          boxShadow: "2px 2px 0px rgba(0,0,0,0.1)",
-        }}
-      >
-        <CodeIcon sx={{ fontSize: 24 }} />
-      </Box>
       <Box>
         <Typography
           variant="h6"
@@ -46,6 +30,7 @@ const Logo = () => {
             fontWeight: 600,
             letterSpacing: "2px",
             marginTop: "-4px",
+            color: "#4CAF50",
           }}
         >
           TREND BLOG

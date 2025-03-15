@@ -36,6 +36,30 @@ interface BlogPost {
 }
 
 const Home = ({ searchValue }: HomeProps) => {
+  const buttonColors = [
+    "#FF6B6B",  // 선명한 빨강
+    "#4ECDC4",  // 청록색
+    "#45B7D1",  // 하늘색
+    "#96CEB4",  // 민트
+    "#FFEEAD",  // 파스텔 노랑
+    "#D4A5A5",  // 분홍빛 보라
+  ];
+
+  // 카테고리별 색상을 저장하는 state
+  const [categoryColors, setCategoryColors] = useState<Record<string, string>>({});
+
+  const getColorForCategory = (category: string) => {
+    if (categoryColors[category]) {
+      return categoryColors[category];
+    }
+    const newColor = buttonColors[Math.floor(Math.random() * buttonColors.length)];
+    setCategoryColors(prev => ({
+      ...prev,
+      [category]: newColor
+    }));
+    return newColor;
+  };
+
   const [trendingTopics, setTrendingTopics] = useState<Post[]>([]);
   const [blogPosts, setBlogPosts] = useState<BlogPost[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -171,17 +195,16 @@ const Home = ({ searchValue }: HomeProps) => {
               mb: 3,
             }}
           >
-            <TrendingUpIcon color="primary" />
+            <TrendingUpIcon sx={{ color: "#000000" }} />
             <Typography
               variant="h5"
               fontWeight={700}
               sx={{
-                color: "#1A237E",
-                textShadow: "1px 1px 2px rgba(255,255,255,0.5)",
-                // background: "rgba(255,255,255,0.8)",
+                color: "#000000",
+                textShadow: "none",
                 padding: "4px 8px",
                 borderRadius: "4px",
-                boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+                boxShadow: "0 2px 4px rgba(0,0,0,0.05)",
               }}
             >
               {searchValue ? "검색 결과" : "실시간 인기 게시글"}
@@ -213,6 +236,7 @@ const Home = ({ searchValue }: HomeProps) => {
                   borderRadius: 2,
                   transition: "transform 0.2s",
                   cursor: "pointer",
+                  border: "1px solid rgba(0, 0, 0, 0.1)",
                   "&:hover": {
                     transform: "translateY(-2px)",
                     boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
@@ -231,8 +255,11 @@ const Home = ({ searchValue }: HomeProps) => {
                       <Chip
                         label={post.category}
                         size="small"
-                        color="primary"
-                        sx={{ borderRadius: "4px" }}
+                        sx={{ 
+                          borderRadius: "4px",
+                          bgcolor: "rgba(0, 0, 0, 0.8)",
+                          color: "#ffffff",
+                        }}
                         onClick={(e) => {
                           e.stopPropagation();
                           navigate(
@@ -247,34 +274,28 @@ const Home = ({ searchValue }: HomeProps) => {
                   </Box>
                   <Typography
                     variant="h6"
-                    sx={{ fontWeight: 600, mb: 1 }}
-                    color="primary.dark"
+                    sx={{ fontWeight: 600, mb: 1, color: "#000000" }}
                   >
                     {post.title}
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
                     {getExcerpt(post.content)}
                   </Typography>
-                  {post.tags.length > 0 && (
-                    <Box
-                      sx={{
-                        display: "flex",
-                        flexWrap: "wrap",
-                        gap: 0.5,
-                        mt: 2,
-                      }}
-                    >
-                      {post.tags.map((tag, index) => (
-                        <Chip
-                          key={index}
-                          label={tag}
-                          size="small"
-                          variant="outlined"
-                          sx={{ borderRadius: "4px" }}
-                        />
-                      ))}
-                    </Box>
-                  )}
+                  <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5, mt: 2 }}>
+                    {post.tags.map((tag, index) => (
+                      <Chip
+                        key={index}
+                        label={tag}
+                        size="small"
+                        variant="outlined"
+                        sx={{ 
+                          borderRadius: "4px",
+                          borderColor: "rgba(0, 0, 0, 0.2)",
+                          color: "rgba(0, 0, 0, 0.7)",
+                        }}
+                      />
+                    ))}
+                  </Box>
                 </CardContent>
               </Card>
             ))}
@@ -288,6 +309,7 @@ const Home = ({ searchValue }: HomeProps) => {
                   borderRadius: 2,
                   transition: "transform 0.2s",
                   cursor: "pointer",
+                  border: "1px solid rgba(0, 0, 0, 0.1)",
                   "&:hover": {
                     transform: "translateY(-2px)",
                     boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
@@ -308,8 +330,14 @@ const Home = ({ searchValue }: HomeProps) => {
                           key={index}
                           label={cat.trim()}
                           size="small"
-                          color="primary"
-                          sx={{ borderRadius: "4px" }}
+                          sx={{ 
+                            borderRadius: "4px",
+                            bgcolor: getColorForCategory(cat.trim()),
+                            color: "#ffffff",
+                            '&:hover': {
+                              filter: 'brightness(0.9)',
+                            }
+                          }}
                           onClick={(e) => {
                             e.stopPropagation();
                             navigate(
@@ -319,21 +347,10 @@ const Home = ({ searchValue }: HomeProps) => {
                         />
                       ))}
                     </Box>
-                    {/* <Box
-                      sx={{ display: "flex", alignItems: "center", gap: 0.5 }}
-                    >
-                      <VisibilityIcon
-                        sx={{ fontSize: 16, color: "primary.light" }}
-                      />
-                      <Typography variant="body2" color="text.secondary">
-                        {topic.views.toLocaleString()}
-                      </Typography>
-                    </Box> */}
                   </Box>
                   <Typography
                     variant="h6"
-                    sx={{ fontWeight: 600, mb: 1 }}
-                    color="primary.dark"
+                    sx={{ fontWeight: 600, mb: 1, color: "#000000" }}
                   >
                     {topic.title}
                   </Typography>
@@ -356,13 +373,16 @@ const Home = ({ searchValue }: HomeProps) => {
               mb: 3,
             }}
           >
-            <CategoryIcon color="primary" />
-            <Typography variant="h5" fontWeight={700} color="primary.dark">
+            <CategoryIcon sx={{ color: "#000000" }} />
+            <Typography variant="h5" fontWeight={700} sx={{ color: "#000000" }}>
               카테고리
             </Typography>
           </Box>
 
-          <Card sx={{ borderRadius: 2 }}>
+          <Card sx={{ 
+            borderRadius: 2,
+            border: "1px solid rgba(0, 0, 0, 0.1)",
+          }}>
             <CardContent>
               <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
                 {categories.length === 0 ? (
@@ -384,33 +404,29 @@ const Home = ({ searchValue }: HomeProps) => {
                       }
                       sx={{
                         justifyContent: "space-between",
-                        color: "secondary.main",
+                        color: "#000000",
                         p: 1.5,
                         borderRadius: 2,
                         "&:hover": {
-                          bgcolor: "grey.50",
+                          bgcolor: "rgba(0, 0, 0, 0.05)",
                         },
                       }}
                     >
                       <Typography
                         variant="body1"
-                        sx={{ fontWeight: 500 }}
-                        color="text.primary"
+                        sx={{ fontWeight: 500, color: "#000000" }}
                       >
                         {category.name}
                       </Typography>
-                      <Box
-                        sx={{ display: "flex", alignItems: "center", gap: 1 }}
-                      >
+                      <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                         <Typography
                           variant="body2"
-                          sx={{ fontWeight: 600 }}
-                          color="text.secondary"
+                          sx={{ fontWeight: 600, color: "rgba(0, 0, 0, 0.6)" }}
                         >
                           {category.count}
                         </Typography>
                         <ArrowForwardIcon
-                          sx={{ fontSize: 16, color: "grey.400" }}
+                          sx={{ fontSize: 16, color: "rgba(0, 0, 0, 0.4)" }}
                         />
                       </Box>
                     </Button>

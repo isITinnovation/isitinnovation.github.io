@@ -12,14 +12,14 @@
 
 .sidebar {
   position: fixed;
-  top: 80px; /* Header 높이에 맞춰 조정 */
+  top: 80px;
   left: 0;
   width: 250px;
-  height: calc(100vh - 80px); /* Header 높이를 뺀 나머지 높이 */
-  background-color: rgba(41, 67, 155, 0.85); /* 더 밝은 남색 배경 */
+  height: calc(100vh - 80px);
+  background-color: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(10px);
-  border-right: 1px solid rgba(100, 149, 237, 0.5); /* 더 밝은 테두리 색상 */
-  box-shadow: 0 0 20px rgba(100, 149, 237, 0.3); /* 더 밝은 그림자 색상 */
+  border-right: 1px solid rgba(230, 230, 230, 0.5);
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
   transform: translateX(-100%);
   transition: transform 0.3s ease;
   z-index: 1000;
@@ -28,7 +28,7 @@
 
 .sidebar.open {
   transform: translateX(0);
-  box-shadow: 0 5px 20px rgba(100, 149, 237, 0.4); /* 더 밝은 그림자 색상 */
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
 }
 
 /* 사이드바 오픈 시 우측 테두리 효과 */
@@ -41,19 +41,19 @@
   height: 100%;
   background: linear-gradient(
     to bottom,
-    #6495ED, /* 더 밝은 파란색 */
-    #4169E1 /* 로열 블루 */
+    rgba(0, 0, 0, 0.05),
+    rgba(0, 0, 0, 0.02)
   );
-  box-shadow: 0 0 15px rgba(100, 149, 237, 0.7); /* 더 밝은 그림자 색상 */
-  animation: glowPulse 2s infinite alternate;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.03);
+  animation: subtleGlow 2s infinite alternate;
 }
 
-@keyframes glowPulse {
+@keyframes subtleGlow {
   0% {
-    box-shadow: 0 0 10px rgba(100, 149, 237, 0.7); /* 더 밝은 그림자 색상 */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.02);
   }
   100% {
-    box-shadow: 0 0 20px rgba(100, 149, 237, 0.9); /* 더 밝은 그림자 색상 */
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.04);
   }
 }
 
@@ -68,7 +68,7 @@
 .sidebar-header h1 {
   font-size: 1.5rem;
   font-weight: bold;
-  color: #ffffff;
+  color: #333;
   margin: 0;
   text-shadow: none;
   background: none;
@@ -91,8 +91,9 @@
 }
 
 .sidebar-logo-blog {
-  color: #00A3C4;
-  text-shadow: 0 0 10px rgba(0, 163, 196, 0.7);
+  color: #424242;
+  text-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  font-weight: 600;
 }
 
 .sidebar-header h1::after {
@@ -101,9 +102,9 @@
   bottom: -5px;
   left: 0;
   width: 100%;
-  height: 2px;
-  background: linear-gradient(to right, #293264, #00A3C4);
-  box-shadow: 0 0 10px rgba(0, 163, 196, 0.7);
+  height: 1px;
+  background: linear-gradient(to right, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.05));
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
 }
 
 .sidebar-menu {
@@ -116,7 +117,7 @@
   display: flex;
   align-items: center;
   padding: 12px 20px;
-  color: rgba(255, 255, 255, 0.8);
+  color: #666;
   text-decoration: none;
   position: relative;
   transition: all 0.3s ease;
@@ -132,58 +133,36 @@
   left: 0;
   width: 4px;
   height: 100%;
-  background-color: #6495ED; /* 더 밝은 파란색 */
+  background-color: #000000;
   transform: scaleY(0);
   transition: transform 0.3s ease;
   border-radius: 0 2px 2px 0;
 }
 
 .sidebar-link:hover {
-  color: #ffffff;
-  background-color: rgba(100, 149, 237, 0.2); /* 더 밝은 호버 배경 */
-  box-shadow: 0 0 10px rgba(100, 149, 237, 0.3); /* 더 밝은 그림자 색상 */
-}
-
-.sidebar-link:hover::before {
-  transform: scaleY(1);
-  box-shadow: 0 0 10px rgba(100, 149, 237, 0.5); /* 더 밝은 그림자 색상 */
+  color: #000000;
+  background-color: rgba(0, 0, 0, 0.05);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 .sidebar-link.active {
-  color: #ffffff;
-  background-color: rgba(100, 149, 237, 0.3); /* 더 밝은 활성 배경 */
-  box-shadow: 0 0 15px rgba(100, 149, 237, 0.4); /* 더 밝은 그림자 색상 */
-}
-
-.sidebar-link.active::before {
-  transform: scaleY(1);
-  background-color: #6495ED; /* 더 밝은 파란색 */
-  box-shadow: 0 0 10px rgba(100, 149, 237, 0.7); /* 더 밝은 그림자 색상 */
-}
-
-.sidebar-link.active::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 4px;
-  height: 100%;
-  background-color: #6495ED; /* 더 밝은 파란색 */
-  box-shadow: 0 0 10px rgba(100, 149, 237, 0.7); /* 더 밝은 그림자 색상 */
+  color: #000000;
+  background-color: rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.15);
 }
 
 .sidebar-icon {
   margin-right: 12px;
-  color: rgba(255, 255, 255, 0.7);
+  color: #666;
   transition: all 0.3s ease;
 }
 
 .sidebar-link:hover .sidebar-icon {
-  color: #6495ED; /* 더 밝은 파란색 */
+  color: #000000;
 }
 
 .sidebar-link.active .sidebar-icon {
-  color: #6495ED; /* 더 밝은 파란색 */
+  color: #000000;
 }
 
 .sidebar-text {

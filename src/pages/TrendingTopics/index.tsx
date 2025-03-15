@@ -80,12 +80,12 @@ const TrendingTopics = () => {
           p: 4,
           mb: 4,
           borderRadius: 3,
-          background: "linear-gradient(135deg, #5D5DFF 0%, #33BBCF 100%)",
+          background: "linear-gradient(135deg, #4CAF50 0%, #8BC34A 100%)",
           color: "white",
           display: "flex",
           flexDirection: "column",
           gap: 2,
-          boxShadow: "0 8px 20px rgba(93, 93, 255, 0.3)",
+          boxShadow: "0 8px 20px rgba(76, 175, 80, 0.2)",
           position: "relative",
           overflow: "hidden",
           "&::before": {
@@ -139,7 +139,7 @@ const TrendingTopics = () => {
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
-                  <SearchIcon sx={{ color: "#5D5DFF" }} />
+                  <SearchIcon sx={{ color: "#4CAF50" }} />
                 </InputAdornment>
               ),
             }}
@@ -157,13 +157,13 @@ const TrendingTopics = () => {
               borderRadius: "20px",
               px: 2,
               py: 0.5,
-              color: category === "전체" ? "white" : "#5D5DFF",
-              borderColor: category !== "전체" ? "#5D5DFF" : "transparent",
-              backgroundColor: category === "전체" ? "#5D5DFF" : "transparent",
+              color: category === "전체" ? "white" : "#4CAF50",
+              borderColor: category !== "전체" ? "#4CAF50" : "transparent",
+              backgroundColor: category === "전체" ? "#4CAF50" : "transparent",
               "&:hover": {
                 bgcolor:
-                  category === "전체" ? "#4040CC" : "rgba(93, 93, 255, 0.1)",
-                boxShadow: "0 0 10px rgba(93, 93, 255, 0.2)",
+                  category === "전체" ? "#43A047" : "rgba(76, 175, 80, 0.1)",
+                boxShadow: "0 0 10px rgba(76, 175, 80, 0.2)",
               },
             }}
           >
@@ -182,8 +182,8 @@ const TrendingTopics = () => {
             mb: 3,
           }}
         >
-          <LocalFireDepartmentIcon sx={{ color: "#33BBCF" }} />
-          <Typography variant="h5" fontWeight={700} sx={{ color: "#0047AB" }}>
+          <LocalFireDepartmentIcon sx={{ color: "#FF5722" }} />
+          <Typography variant="h5" fontWeight={700} sx={{ color: "#333333" }}>
             실시간 인기 포스트
           </Typography>
         </Box>
@@ -195,13 +195,13 @@ const TrendingTopics = () => {
                 sx={{
                   borderRadius: 2,
                   transition: "all 0.3s",
-                  backgroundColor: "rgba(26, 27, 70, 0.7)",
+                  backgroundColor: "#ffffff",
                   backdropFilter: "blur(5px)",
-                  border: "1px solid rgba(93, 93, 255, 0.2)",
+                  border: "1px solid rgba(0, 0, 0, 0.1)",
                   "&:hover": {
                     transform: "translateX(4px)",
-                    boxShadow: "0 4px 20px rgba(93, 93, 255, 0.3)",
-                    borderColor: "rgba(93, 93, 255, 0.4)",
+                    boxShadow: "0 4px 20px rgba(0, 0, 0, 0.1)",
+                    borderColor: "rgba(0, 0, 0, 0.2)",
                   },
                 }}
               >
@@ -220,7 +220,13 @@ const TrendingTopics = () => {
                           label={post.category}
                           size="small"
                           sx={{
-                            bgcolor: "#5D5DFF",
+                            bgcolor: post.category === "인공지능" ? "#FDD835" :
+                                   post.category === "웹개발" ? "#4CAF50" :
+                                   post.category === "모바일" ? "#FF5722" :
+                                   post.category === "클라우드" ? "#2196F3" :
+                                   post.category === "보안" ? "#F44336" :
+                                   post.category === "블록체인" ? "#9C27B0" :
+                                   "#333333",
                             color: "white",
                             fontWeight: 600,
                           }}
@@ -229,15 +235,15 @@ const TrendingTopics = () => {
                           <Chip
                             icon={
                               <TrendingUpIcon
-                                sx={{ fontSize: 16, color: "#33BBCF" }}
+                                sx={{ fontSize: 16, color: "#FF5722" }}
                               />
                             }
                             label="트렌딩"
                             size="small"
                             variant="outlined"
                             sx={{
-                              color: "#33BBCF",
-                              borderColor: "#33BBCF",
+                              color: "#FF5722",
+                              borderColor: "#FF5722",
                               fontWeight: 600,
                             }}
                           />
@@ -245,13 +251,13 @@ const TrendingTopics = () => {
                       </Box>
                       <Typography
                         variant="h6"
-                        sx={{ fontWeight: 600, mb: 1, color: "#ffffff" }}
+                        sx={{ fontWeight: 600, mb: 1, color: "#333333" }}
                       >
                         {post.title}
                       </Typography>
                       <Typography
                         variant="body2"
-                        sx={{ mb: 2, color: "rgba(255, 255, 255, 0.7)" }}
+                        sx={{ mb: 2, color: "rgba(0, 0, 0, 0.7)" }}
                       >
                         {post.excerpt}
                       </Typography>
@@ -265,15 +271,22 @@ const TrendingTopics = () => {
                             sx={{
                               width: 24,
                               height: 24,
-                              bgcolor: "#5D5DFF",
+                              bgcolor: post.category === "인공지능" ? "#FDD835" :
+                                      post.category === "웹개발" ? "#4CAF50" :
+                                      post.category === "모바일" ? "#FF5722" :
+                                      post.category === "클라우드" ? "#2196F3" :
+                                      post.category === "보안" ? "#F44336" :
+                                      post.category === "블록체인" ? "#9C27B0" :
+                                      "#333333",
                               fontSize: "0.875rem",
+                              color: "white",
                             }}
                           >
                             {post.authorAvatar}
                           </Avatar>
                           <Typography
                             variant="body2"
-                            sx={{ color: "rgba(255, 255, 255, 0.9)" }}
+                            sx={{ color: "rgba(0, 0, 0, 0.9)" }}
                           >
                             {post.author}
                           </Typography>
@@ -291,12 +304,12 @@ const TrendingTopics = () => {
                             <AccessTimeIcon
                               sx={{
                                 fontSize: 16,
-                                color: "rgba(255, 255, 255, 0.6)",
+                                color: "rgba(0, 0, 0, 0.6)",
                               }}
                             />
                             <Typography
                               variant="body2"
-                              sx={{ color: "rgba(255, 255, 255, 0.6)" }}
+                              sx={{ color: "rgba(0, 0, 0, 0.6)" }}
                             >
                               {post.timeAgo}
                             </Typography>
@@ -311,12 +324,12 @@ const TrendingTopics = () => {
                             <VisibilityIcon
                               sx={{
                                 fontSize: 16,
-                                color: "rgba(255, 255, 255, 0.6)",
+                                color: "rgba(0, 0, 0, 0.6)",
                               }}
                             />
                             <Typography
                               variant="body2"
-                              sx={{ color: "rgba(255, 255, 255, 0.6)" }}
+                              sx={{ color: "rgba(0, 0, 0, 0.6)" }}
                             >
                               {post.views.toLocaleString()}
                             </Typography>
@@ -331,12 +344,12 @@ const TrendingTopics = () => {
                             <CommentIcon
                               sx={{
                                 fontSize: 16,
-                                color: "rgba(255, 255, 255, 0.6)",
+                                color: "rgba(0, 0, 0, 0.6)",
                               }}
                             />
                             <Typography
                               variant="body2"
-                              sx={{ color: "rgba(255, 255, 255, 0.6)" }}
+                              sx={{ color: "rgba(0, 0, 0, 0.6)" }}
                             >
                               {post.comments}
                             </Typography>

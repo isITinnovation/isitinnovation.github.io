@@ -69,7 +69,7 @@ const App = () => {
               component="main"
               sx={{
                 paddingX: "0.5rem",
-                height: "90vh",
+                height: "80vh",
                 overflowY: "auto",
                 display: "flex",
                 flexDirection: "column",

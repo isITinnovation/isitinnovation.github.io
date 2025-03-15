@@ -117,27 +117,12 @@ const Header = ({
     <AppBar
       position="fixed"
       sx={{
-        bgcolor: "transparent",
+        bgcolor: "#ffffff",
         borderBottom: "1px solid",
-        borderColor: "rgba(93, 93, 255, 0.3)",
-        boxShadow: "0 0 20px rgba(93, 93, 255, 0.2)",
-        backgroundImage: `url(${headerBgImage})`,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        backgroundRepeat: "no-repeat",
+        borderColor: "rgba(0, 0, 0, 0.1)",
+        boxShadow: "0 0 20px rgba(0, 0, 0, 0.05)",
         position: "relative",
         height: "80px",
-        "&::before": {
-          content: '""',
-          position: "absolute",
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          backgroundColor: "rgba(10, 15, 41, 0.3)",
-          backdropFilter: "blur(2px)",
-          zIndex: 0,
-        },
       }}
     >
       <Container maxWidth="lg" disableGutters={isMobile}>
@@ -154,14 +139,14 @@ const Header = ({
             <IconButton
               onClick={() => setIsOpen(!isOpen)}
               sx={{
-                color: "#5D5DFF",
+                color: "#000000",
                 width: { xs: "36px", sm: "48px" },
                 height: { xs: "36px", sm: "48px" },
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
                 "&:hover": {
-                  backgroundColor: "rgba(93, 93, 255, 0.1)",
+                  backgroundColor: "rgba(0, 0, 0, 0.04)",
                 },
               }}
             >
@@ -200,15 +185,14 @@ const Header = ({
                 maxWidth: { sm: 200, md: 300, lg: 500 },
                 mx: 2,
                 border: "2px solid",
-                borderColor: "rgba(93, 93, 255, 0.3)",
+                borderColor: "rgba(0, 0, 0, 0.2)",
                 borderRadius: "8px",
                 transition: "all 0.2s",
-                backgroundColor: "rgba(10, 15, 41, 0.7)",
-                backdropFilter: "blur(5px)",
-                boxShadow: "0 0 10px rgba(93, 93, 255, 0.2)",
+                backgroundColor: "#ffffff",
+                boxShadow: "0 0 10px rgba(0, 0, 0, 0.05)",
                 "&:hover": {
-                  borderColor: "#5D5DFF",
-                  boxShadow: "0 0 15px rgba(93, 93, 255, 0.3)",
+                  borderColor: "#000000",
+                  boxShadow: "0 0 15px rgba(0, 0, 0, 0.1)",
                 },
               }}
             >
@@ -216,9 +200,9 @@ const Header = ({
                 sx={{
                   ml: 2,
                   flex: 1,
-                  color: "#ffffff",
+                  color: "#000000",
                   "& ::placeholder": {
-                    color: "rgba(255, 255, 255, 0.7)",
+                    color: "rgba(0, 0, 0, 0.6)",
                     opacity: 1,
                   },
                 }}
@@ -227,7 +211,7 @@ const Header = ({
                 onChange={(e) => setSearchValue(e.target.value)}
               />
               <IconButton
-                sx={{ p: "10px", color: "#5D5DFF" }}
+                sx={{ p: "10px", color: "#000000" }}
                 onClick={handleSearchOpen}
               >
                 <SearchIcon />
@@ -254,10 +238,10 @@ const Header = ({
                     fontWeight: 600,
                     borderRadius: "8px",
                     boxShadow: "none",
-                    background:
-                      "linear-gradient(45deg, #5D5DFF 30%, #33BBCF 90%)",
+                    background: "#000000",
                     "&:hover": {
-                      boxShadow: "0 0 15px rgba(93, 93, 255, 0.5)",
+                      background: "#333333",
+                      boxShadow: "0 0 15px rgba(0, 0, 0, 0.2)",
                     },
                   }}
                 >
@@ -281,7 +265,7 @@ const Header = ({
                   sx={{
                     ml: 1,
                     border: "2px solid",
-                    borderColor: "rgba(93, 93, 255, 0.5)",
+                    borderColor: "rgba(0, 0, 0, 0.2)",
                     p: 0.5,
                   }}
                 >
@@ -289,7 +273,7 @@ const Header = ({
                     sx={{
                       width: 32,
                       height: 32,
-                      bgcolor: "primary.main",
+                      bgcolor: "#000000",
                       fontSize: "1rem",
                     }}
                   >
@@ -308,7 +292,7 @@ const Header = ({
                       boxShadow: "0 8px 16px rgba(0,0,0,0.1)",
                       borderRadius: "8px",
                       border: "1px solid",
-                      borderColor: "rgba(93, 93, 255, 0.2)",
+                      borderColor: "rgba(0, 0, 0, 0.1)",
                     },
                   }}
                   transformOrigin={{ horizontal: "right", vertical: "top" }}
@@ -329,11 +313,11 @@ const Header = ({
                       navigate("/profile");
                     }}
                   >
-                    <AccountCircleIcon fontSize="small" sx={{ mr: 1 }} />
+                    <AccountCircleIcon fontSize="small" sx={{ mr: 1, color: "#000000" }} />
                     프로필
                   </MenuItem>
                   <MenuItem onClick={handleLogout}>
-                    <LogoutIcon fontSize="small" sx={{ mr: 1 }} />
+                    <LogoutIcon fontSize="small" sx={{ mr: 1, color: "#000000" }} />
                     로그아웃
                   </MenuItem>
                 </Menu>
@@ -355,11 +339,11 @@ const Header = ({
                     p: { xs: 0, sm: "0.5rem 1rem" },
                     fontWeight: 600,
                     borderRadius: "8px",
-                    borderColor: "rgba(93, 93, 255, 0.5)",
-                    color: "#ffffff",
+                    borderColor: "rgba(0, 0, 0, 0.3)",
+                    color: "#000000",
                     "&:hover": {
-                      borderColor: "#5D5DFF",
-                      backgroundColor: "rgba(93, 93, 255, 0.1)",
+                      borderColor: "#000000",
+                      backgroundColor: "rgba(0, 0, 0, 0.05)",
                     },
                   }}
                 >
