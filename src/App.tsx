@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Header from "./components/Header";
 import Sidebar from "./components/Sidebar";
 import Home from "./pages/Home/index";
-import TrendingTopics from "./pages/TrendingTopics/index";
+import StockInfo from "./pages/TrendingTopics/index";
 import PromptGuide from "./pages/PromptGuide/index";
 import BlogEditor from "./pages/BlogEditor/index";
 import PostDetailPage from "./pages/PostDetail";
@@ -12,6 +12,7 @@ import CategoryPage from "./pages/Category/index";
 import Login from "./pages/Login/index";
 import Register from "./pages/Register/index";
 import Profile from "./pages/Profile/index";
+import About from "./pages/About/index";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { theme } from "./styles/theme";
 
@@ -82,8 +83,9 @@ const App = () => {
                 />
                 <Route path="/" element={<Home searchValue={searchValue} />} />
                 <Route path="/post/:id" element={<PostDetailPage />} />
-                <Route path="/trending" element={<TrendingTopics />} />
+                <Route path="/stock-trend" element={<StockInfo />} />
                 <Route path="/prompt-guide" element={<PromptGuide />} />
+                <Route path="/about" element={<About />} />
                 <Route
                   path="/write"
                   element={

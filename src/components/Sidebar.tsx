@@ -39,7 +39,7 @@ const Sidebar = ({ isOpen, setIsOpen }: SidebarProps) => {
         <div className="sidebar-content">
           <div className="sidebar-header">
             <h1>
-              <span className="sidebar-logo-blog">isITBlog</span>
+              <span className="sidebar-logo-blog">TREND BLOG</span>
             </h1>
           </div>
           <ul className="sidebar-menu">

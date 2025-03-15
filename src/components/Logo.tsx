@@ -15,10 +15,9 @@ const Logo = () => {
           sx={{
             fontWeight: 800,
             fontSize: "22px",
-            background: "linear-gradient(45deg, #FFD700 30%, #FFA500 90%)",
-            WebkitBackgroundClip: "text",
-            WebkitTextFillColor: "transparent",
+            color: "#000000",
             letterSpacing: "-0.5px",
+            textShadow: "0px 1px 2px rgba(0, 0, 0, 0.1)",
           }}
         >
           ISIT
@@ -29,7 +28,7 @@ const Logo = () => {
             fontWeight: 600,
             letterSpacing: "2px",
             marginTop: "-4px",
-            color: "#4CAF50",
+            color: "#555555",
           }}
         >
           TREND BLOG

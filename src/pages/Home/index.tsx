@@ -37,25 +37,26 @@ interface BlogPost {
 
 const Home = ({ searchValue }: HomeProps) => {
   const buttonColors = [
-    "#FF6B6B",  // 선명한 빨강
-    "#4ECDC4",  // 청록색
-    "#45B7D1",  // 하늘색
-    "#96CEB4",  // 민트
-    "#FFEEAD",  // 파스텔 노랑
-    "#D4A5A5",  // 분홍빛 보라
+    "#7D7D7D", // 문빔 그레이
+    "#9370DB", // 디지털 라벤더
+    "#3EB489", // 네오 민트
+    "#A47551", // 모카무스
   ];
 
   // 카테고리별 색상을 저장하는 state
-  const [categoryColors, setCategoryColors] = useState<Record<string, string>>({});
+  const [categoryColors, setCategoryColors] = useState<Record<string, string>>(
+    {}
+  );
 
   const getColorForCategory = (category: string) => {
     if (categoryColors[category]) {
       return categoryColors[category];
     }
-    const newColor = buttonColors[Math.floor(Math.random() * buttonColors.length)];
-    setCategoryColors(prev => ({
+    const newColor =
+      buttonColors[Math.floor(Math.random() * buttonColors.length)];
+    setCategoryColors((prev) => ({
       ...prev,
-      [category]: newColor
+      [category]: newColor,
     }));
     return newColor;
   };
@@ -204,7 +205,6 @@ const Home = ({ searchValue }: HomeProps) => {
                 textShadow: "none",
                 padding: "4px 8px",
                 borderRadius: "4px",
-                boxShadow: "0 2px 4px rgba(0,0,0,0.05)",
               }}
             >
               {searchValue ? "검색 결과" : "실시간 인기 게시글"}
@@ -255,10 +255,14 @@ const Home = ({ searchValue }: HomeProps) => {
                       <Chip
                         label={post.category}
                         size="small"
-                        sx={{ 
+                        sx={{
                           borderRadius: "4px",
-                          bgcolor: "rgba(0, 0, 0, 0.8)",
-                          color: "#ffffff",
+                          bgcolor: getColorForCategory(post.category),
+                          color: "#FFFFFF",
+                          fontWeight: 500,
+                          "&:hover": {
+                            filter: "brightness(0.9)",
+                          },
                         }}
                         onClick={(e) => {
                           e.stopPropagation();
@@ -281,14 +285,16 @@ const Home = ({ searchValue }: HomeProps) => {
                   <Typography variant="body2" color="text.secondary">
                     {getExcerpt(post.content)}
                   </Typography>
-                  <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5, mt: 2 }}>
+                  <Box
+                    sx={{ display: "flex", flexWrap: "wrap", gap: 0.5, mt: 2 }}
+                  >
                     {post.tags.map((tag, index) => (
                       <Chip
                         key={index}
                         label={tag}
                         size="small"
                         variant="outlined"
-                        sx={{ 
+                        sx={{
                           borderRadius: "4px",
                           borderColor: "rgba(0, 0, 0, 0.2)",
                           color: "rgba(0, 0, 0, 0.7)",
@@ -330,13 +336,14 @@ const Home = ({ searchValue }: HomeProps) => {
                           key={index}
                           label={cat.trim()}
                           size="small"
-                          sx={{ 
+                          sx={{
                             borderRadius: "4px",
                             bgcolor: getColorForCategory(cat.trim()),
-                            color: "#ffffff",
-                            '&:hover': {
-                              filter: 'brightness(0.9)',
-                            }
+                            color: "#FFFFFF",
+                            fontWeight: 500,
+                            "&:hover": {
+                              filter: "brightness(0.9)",
+                            },
                           }}
                           onClick={(e) => {
                             e.stopPropagation();
@@ -379,10 +386,12 @@ const Home = ({ searchValue }: HomeProps) => {
             </Typography>
           </Box>
 
-          <Card sx={{ 
-            borderRadius: 2,
-            border: "1px solid rgba(0, 0, 0, 0.1)",
-          }}>
+          <Card
+            sx={{
+              borderRadius: 2,
+              border: "1px solid rgba(0, 0, 0, 0.1)",
+            }}
+          >
             <CardContent>
               <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
                 {categories.length === 0 ? (
@@ -418,7 +427,9 @@ const Home = ({ searchValue }: HomeProps) => {
                       >
                         {category.name}
                       </Typography>
-                      <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                      <Box
+                        sx={{ display: "flex", alignItems: "center", gap: 1 }}
+                      >
                         <Typography
                           variant="body2"
                           sx={{ fontWeight: 600, color: "rgba(0, 0, 0, 0.6)" }}

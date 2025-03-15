@@ -10,13 +10,13 @@ export const ROUTES: Route[] = [
     path: "/isITinnovation",
   },
   {
-    name: "트렌드",
-    path: "/trending",
+    name: "주식트렌드 ",
+    path: "/stock-trend",
   },
-  {
-    name: "프롬프트",
-    path: "/prompt-guide",
-  },
+  // {
+  //   name: "프롬프트",
+  //   path: "/prompt-guide",
+  // },
   {
     name: "소개",
     path: "/about",
