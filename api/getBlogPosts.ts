@@ -1,5 +1,5 @@
 import { VercelRequest, VercelResponse } from "@vercel/node";
-import pool from "./utils/mysql";
+import pool from "./utils/mysql.js";
 
 // 블로그 포스트 타입 정의
 interface BlogPost {

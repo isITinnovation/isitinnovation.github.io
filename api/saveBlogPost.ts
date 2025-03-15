@@ -1,6 +1,6 @@
 import { VercelRequest, VercelResponse } from "@vercel/node";
 import { v4 as uuidv4 } from "uuid";
-import pool from "./utils/mysql";
+import pool from "./utils/mysql.js";
 
 // 블로그 포스트 타입 정의
 interface BlogPost {
