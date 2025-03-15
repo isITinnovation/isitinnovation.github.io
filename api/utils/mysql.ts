@@ -32,7 +32,7 @@ const dbConfig: any = {
   host: host,
   user: process.env.MYSQL_USER || "root",
   password: process.env.MYSQL_PASSWORD || "",
-  database: process.env.MYSQL_DATABASE || "isitinnovation",
+  database: process.env.MYSQL_DATABASE || "isitinovation",
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0,
@@ -62,6 +62,19 @@ export const testConnection = async () => {
     return true;
   } catch (error) {
     console.error("MySQL 데이터베이스 연결 실패:", error);
+    if (error instanceof Error) {
+      console.error("오류 메시지:", error.message);
+      console.error("오류 스택:", error.stack);
+      if ("code" in error) {
+        console.error("오류 코드:", (error as any).code);
+      }
+      if ("errno" in error) {
+        console.error("오류 번호:", (error as any).errno);
+      }
+      if ("sqlMessage" in error) {
+        console.error("SQL 오류 메시지:", (error as any).sqlMessage);
+      }
+    }
     return false;
   }
 };
