@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Typography,
   Box,
@@ -24,6 +24,8 @@ import {
   Select,
   MenuItem,
   Grid,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import EditIcon from "@mui/icons-material/Edit";
@@ -36,10 +38,18 @@ interface User {
   email: string;
   approvedYN: string;
   created_at: string;
-  updated_at: string;
+  updated_at?: string;
 }
 
-const UserManagementPanel = () => {
+export interface UserManagementPanelProps {
+  mockUsers?: User[];
+  useMockData?: boolean;
+}
+
+const UserManagementPanel: React.FC<UserManagementPanelProps> = ({
+  mockUsers,
+  useMockData = false,
+}) => {
   const [users, setUsers] = useState<User[]>([]);
   const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
@@ -54,9 +64,18 @@ const UserManagementPanel = () => {
     email: "",
     approvedYN: "",
   });
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   // 사용자 목록 가져오기
   const fetchUsers = async () => {
+    if (useMockData && mockUsers) {
+      setUsers(mockUsers);
+      setFilteredUsers(mockUsers);
+      setLoading(false);
+      return;
+    }
+
     setLoading(true);
     setError(null);
 
@@ -87,6 +106,39 @@ const UserManagementPanel = () => {
   // 사용자 정보 수정
   const handleEditUser = async () => {
     if (!selectedUser) return;
+
+    if (useMockData) {
+      // 목업 데이터 사용 시 로컬에서 상태 변경
+      const updatedUser = {
+        ...selectedUser,
+        name: editedUser.name,
+        email: editedUser.email,
+        approvedYN: editedUser.approvedYN,
+        updated_at: new Date().toISOString(),
+      };
+
+      setUsers((prevUsers) =>
+        prevUsers.map((user) =>
+          user.id === selectedUser.id ? updatedUser : user
+        )
+      );
+
+      setFilteredUsers((prevUsers) =>
+        prevUsers.map((user) =>
+          user.id === selectedUser.id ? updatedUser : user
+        )
+      );
+
+      setSuccessMessage("사용자 정보가 성공적으로 수정되었습니다.");
+      setEditDialogOpen(false);
+
+      // 3초 후 성공 메시지 제거
+      setTimeout(() => {
+        setSuccessMessage(null);
+      }, 3000);
+
+      return;
+    }
 
     try {
       const timestamp = new Date().getTime();
@@ -140,6 +192,27 @@ const UserManagementPanel = () => {
   // 사용자 삭제
   const handleDeleteUser = async () => {
     if (!selectedUser) return;
+
+    if (useMockData) {
+      // 목업 데이터 사용 시 로컬에서 상태 변경
+      setUsers((prevUsers) =>
+        prevUsers.filter((user) => user.id !== selectedUser.id)
+      );
+
+      setFilteredUsers((prevUsers) =>
+        prevUsers.filter((user) => user.id !== selectedUser.id)
+      );
+
+      setSuccessMessage("사용자가 성공적으로 삭제되었습니다.");
+      setDeleteDialogOpen(false);
+
+      // 3초 후 성공 메시지 제거
+      setTimeout(() => {
+        setSuccessMessage(null);
+      }, 3000);
+
+      return;
+    }
 
     try {
       const timestamp = new Date().getTime();
@@ -220,7 +293,7 @@ const UserManagementPanel = () => {
   // 컴포넌트 마운트 시 사용자 목록 가져오기
   useEffect(() => {
     fetchUsers();
-  }, []);
+  }, [useMockData, mockUsers]);
 
   // 날짜 포맷팅 함수
   const formatDate = (dateString: string) => {
@@ -271,7 +344,7 @@ const UserManagementPanel = () => {
             ),
           }}
           sx={{
-            maxWidth: 400,
+            maxWidth: isMobile ? "100%" : 400,
             "& .MuiOutlinedInput-root": {
               borderRadius: 2,
               "& fieldset": {
@@ -287,14 +360,20 @@ const UserManagementPanel = () => {
 
       <TableContainer
         component={Paper}
-        sx={{ boxShadow: "none", border: "1px solid #EEEEEE" }}
+        sx={{
+          boxShadow: "none",
+          border: "1px solid #EEEEEE",
+          overflowX: "auto",
+        }}
       >
         <Table>
           <TableHead sx={{ backgroundColor: "#F5F5F5" }}>
             <TableRow>
               <TableCell sx={{ fontWeight: 700 }}>이름</TableCell>
               <TableCell sx={{ fontWeight: 700 }}>이메일</TableCell>
-              <TableCell sx={{ fontWeight: 700 }}>가입일</TableCell>
+              {!isMobile && (
+                <TableCell sx={{ fontWeight: 700 }}>가입일</TableCell>
+              )}
               <TableCell sx={{ fontWeight: 700 }}>승인 상태</TableCell>
               <TableCell sx={{ fontWeight: 700 }}>관리</TableCell>
             </TableRow>
@@ -305,7 +384,9 @@ const UserManagementPanel = () => {
                 <TableRow key={user.id} hover>
                   <TableCell>{user.name}</TableCell>
                   <TableCell>{user.email}</TableCell>
-                  <TableCell>{formatDate(user.created_at)}</TableCell>
+                  {!isMobile && (
+                    <TableCell>{formatDate(user.created_at)}</TableCell>
+                  )}
                   <TableCell>
                     <Chip
                       label={user.approvedYN === "Y" ? "승인됨" : "미승인"}
@@ -317,26 +398,32 @@ const UserManagementPanel = () => {
                     />
                   </TableCell>
                   <TableCell>
-                    <Box sx={{ display: "flex", gap: 1 }}>
+                    <Box
+                      sx={{
+                        display: "flex",
+                        gap: 1,
+                        flexWrap: isMobile ? "wrap" : "nowrap",
+                      }}
+                    >
                       <Button
                         variant="outlined"
                         color="primary"
                         size="small"
-                        startIcon={<EditIcon />}
+                        startIcon={!isMobile && <EditIcon />}
                         onClick={() => handleOpenEditDialog(user)}
                         sx={{ borderRadius: "8px" }}
                       >
-                        수정
+                        {isMobile ? "수정" : "수정"}
                       </Button>
                       <Button
                         variant="outlined"
                         color="error"
                         size="small"
-                        startIcon={<DeleteIcon />}
+                        startIcon={!isMobile && <DeleteIcon />}
                         onClick={() => handleOpenDeleteDialog(user)}
                         sx={{ borderRadius: "8px" }}
                       >
-                        삭제
+                        {isMobile ? "삭제" : "삭제"}
                       </Button>
                     </Box>
                   </TableCell>
@@ -344,7 +431,11 @@ const UserManagementPanel = () => {
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={5} align="center" sx={{ py: 3 }}>
+                <TableCell
+                  colSpan={isMobile ? 4 : 5}
+                  align="center"
+                  sx={{ py: 3 }}
+                >
                   {searchTerm
                     ? "검색 결과가 없습니다."
                     : "등록된 사용자가 없습니다."}

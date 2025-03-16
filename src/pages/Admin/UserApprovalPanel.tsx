@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Box,
   Table,
@@ -14,6 +14,8 @@ import {
   Alert,
   TextField,
   InputAdornment,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
@@ -26,18 +28,36 @@ interface User {
   email: string;
   approvedYN: string;
   created_at: string;
+  updated_at?: string;
 }
 
-const UserApprovalPanel = () => {
+export interface UserApprovalPanelProps {
+  mockUsers?: User[];
+  useMockData?: boolean;
+}
+
+const UserApprovalPanel: React.FC<UserApprovalPanelProps> = ({
+  mockUsers,
+  useMockData = false,
+}: UserApprovalPanelProps) => {
   const [users, setUsers] = useState<User[]>([]);
   const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   // 사용자 목록 가져오기
   const fetchUsers = async () => {
+    if (useMockData && mockUsers) {
+      setUsers(mockUsers);
+      setFilteredUsers(mockUsers);
+      setLoading(false);
+      return;
+    }
+
     setLoading(true);
     setError(null);
 
@@ -67,6 +87,36 @@ const UserApprovalPanel = () => {
 
   // 사용자 승인 상태 변경
   const handleApprovalChange = async (userId: string, approve: boolean) => {
+    if (useMockData) {
+      // 목업 데이터 사용 시 로컬에서 상태 변경
+      setUsers((prevUsers) =>
+        prevUsers.map((user) =>
+          user.id === userId
+            ? { ...user, approvedYN: approve ? "Y" : "N" }
+            : user
+        )
+      );
+
+      setFilteredUsers((prevUsers) =>
+        prevUsers.map((user) =>
+          user.id === userId
+            ? { ...user, approvedYN: approve ? "Y" : "N" }
+            : user
+        )
+      );
+
+      setSuccessMessage(
+        `사용자 ${approve ? "승인" : "승인 취소"}이 완료되었습니다.`
+      );
+
+      // 3초 후 성공 메시지 제거
+      setTimeout(() => {
+        setSuccessMessage(null);
+      }, 3000);
+
+      return;
+    }
+
     try {
       const timestamp = new Date().getTime();
       const response = await axios.post(
@@ -139,7 +189,7 @@ const UserApprovalPanel = () => {
   // 컴포넌트 마운트 시 사용자 목록 가져오기
   useEffect(() => {
     fetchUsers();
-  }, []);
+  }, [useMockData, mockUsers]);
 
   // 날짜 포맷팅 함수
   const formatDate = (dateString: string) => {
@@ -190,7 +240,7 @@ const UserApprovalPanel = () => {
             ),
           }}
           sx={{
-            maxWidth: 400,
+            maxWidth: isMobile ? "100%" : 400,
             "& .MuiOutlinedInput-root": {
               borderRadius: 2,
               "& fieldset": {
@@ -206,14 +256,20 @@ const UserApprovalPanel = () => {
 
       <TableContainer
         component={Paper}
-        sx={{ boxShadow: "none", border: "1px solid #EEEEEE" }}
+        sx={{
+          boxShadow: "none",
+          border: "1px solid #EEEEEE",
+          overflowX: "auto",
+        }}
       >
         <Table>
           <TableHead sx={{ backgroundColor: "#F5F5F5" }}>
             <TableRow>
               <TableCell sx={{ fontWeight: 700 }}>이름</TableCell>
               <TableCell sx={{ fontWeight: 700 }}>이메일</TableCell>
-              <TableCell sx={{ fontWeight: 700 }}>가입일</TableCell>
+              {!isMobile && (
+                <TableCell sx={{ fontWeight: 700 }}>가입일</TableCell>
+              )}
               <TableCell sx={{ fontWeight: 700 }}>승인 상태</TableCell>
               <TableCell sx={{ fontWeight: 700 }}>관리</TableCell>
             </TableRow>
@@ -224,7 +280,9 @@ const UserApprovalPanel = () => {
                 <TableRow key={user.id} hover>
                   <TableCell>{user.name}</TableCell>
                   <TableCell>{user.email}</TableCell>
-                  <TableCell>{formatDate(user.created_at)}</TableCell>
+                  {!isMobile && (
+                    <TableCell>{formatDate(user.created_at)}</TableCell>
+                  )}
                   <TableCell>
                     <Chip
                       label={user.approvedYN === "Y" ? "승인됨" : "미승인"}
@@ -241,22 +299,22 @@ const UserApprovalPanel = () => {
                         variant="outlined"
                         color="error"
                         size="small"
-                        startIcon={<CancelIcon />}
+                        startIcon={!isMobile && <CancelIcon />}
                         onClick={() => handleApprovalChange(user.id, false)}
                         sx={{ borderRadius: "8px" }}
                       >
-                        승인 취소
+                        {isMobile ? "취소" : "승인 취소"}
                       </Button>
                     ) : (
                       <Button
                         variant="contained"
                         color="success"
                         size="small"
-                        startIcon={<CheckCircleIcon />}
+                        startIcon={!isMobile && <CheckCircleIcon />}
                         onClick={() => handleApprovalChange(user.id, true)}
                         sx={{ borderRadius: "8px" }}
                       >
-                        승인
+                        {isMobile ? "승인" : "승인"}
                       </Button>
                     )}
                   </TableCell>
@@ -264,7 +322,11 @@ const UserApprovalPanel = () => {
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={5} align="center" sx={{ py: 3 }}>
+                <TableCell
+                  colSpan={isMobile ? 4 : 5}
+                  align="center"
+                  sx={{ py: 3 }}
+                >
                   {searchTerm
                     ? "검색 결과가 없습니다."
                     : "등록된 사용자가 없습니다."}

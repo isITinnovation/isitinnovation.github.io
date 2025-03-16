@@ -9,10 +9,61 @@ import {
   Tab,
   CircularProgress,
   Alert,
+  useMediaQuery,
+  useTheme,
+  Button,
 } from "@mui/material";
-import { isAuthenticated, getCurrentUser } from "../../utils/authService";
+import {
+  isAuthenticated,
+  getCurrentUser,
+  isAdmin,
+} from "../../utils/authService";
 import UserApprovalPanel from "./UserApprovalPanel";
 import UserManagementPanel from "./UserManagementPanel";
+
+// 목업 데이터
+const MOCK_USERS = [
+  {
+    id: "mock-1",
+    name: "홍길동",
+    email: "hong@example.com",
+    approvedYN: "Y",
+    created_at: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(),
+    updated_at: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
+  },
+  {
+    id: "mock-2",
+    name: "김철수",
+    email: "kim@example.com",
+    approvedYN: "N",
+    created_at: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
+    updated_at: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
+  },
+  {
+    id: "mock-3",
+    name: "이영희",
+    email: "lee@example.com",
+    approvedYN: "Y",
+    created_at: new Date(Date.now() - 14 * 24 * 60 * 60 * 1000).toISOString(),
+    updated_at: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString(),
+  },
+  {
+    id: "mock-4",
+    name: "박지민",
+    email: "park@example.com",
+    approvedYN: "N",
+    created_at: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
+    updated_at: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
+  },
+  {
+    id: "mock-5",
+    name: "최민수",
+    email: "choi@example.com",
+    approvedYN: "N",
+    created_at: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
+    updated_at: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
+  },
+];
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -58,27 +109,51 @@ const AdminPage = () => {
   const [tabValue, setTabValue] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [useMockData, setUseMockData] = useState(false);
+  const [showMockBanner, setShowMockBanner] = useState(false);
   const user = getCurrentUser() as User | null;
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   useEffect(() => {
     // 인증 및 권한 확인
     if (!isAuthenticated()) {
-      navigate("/login");
-      return;
+      // 개발 환경에서는 목업 데이터 사용
+      if (process.env.NODE_ENV === "development") {
+        console.log("개발 환경에서 목업 데이터를 사용합니다.");
+        setUseMockData(true);
+        setShowMockBanner(true);
+        setLoading(false);
+      } else {
+        navigate("/login");
+        return;
+      }
+    } else {
+      // 관리자 권한 확인
+      if (!isAdmin()) {
+        // 개발 환경에서는 목업 데이터 사용
+        if (process.env.NODE_ENV === "development") {
+          console.log("개발 환경에서 목업 데이터를 사용합니다.");
+          setUseMockData(true);
+          setShowMockBanner(true);
+          setLoading(false);
+        } else {
+          setError("관리자 권한이 없습니다.");
+          setLoading(false);
+        }
+      } else {
+        setLoading(false);
+      }
     }
-
-    // 승인된 사용자인지 확인
-    if (!user?.approved) {
-      setError("관리자 권한이 없습니다.");
-      setLoading(false);
-      return;
-    }
-
-    setLoading(false);
   }, [navigate, user]);
 
   const handleTabChange = (_: React.SyntheticEvent, newValue: number) => {
     setTabValue(newValue);
+  };
+
+  // 목업 데이터 사용 토글
+  const toggleMockData = () => {
+    setUseMockData(!useMockData);
   };
 
   if (loading) {
@@ -105,7 +180,7 @@ const AdminPage = () => {
     );
   }
 
-  if (error) {
+  if (error && !useMockData) {
     return (
       <Container
         maxWidth="lg"
@@ -114,16 +189,48 @@ const AdminPage = () => {
         <Alert severity="error" sx={{ marginBottom: "2rem" }}>
           {error}
         </Alert>
+        {process.env.NODE_ENV === "development" && (
+          <Box sx={{ textAlign: "center", mt: 3 }}>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={toggleMockData}
+            >
+              목업 데이터로 보기
+            </Button>
+          </Box>
+        )}
       </Container>
     );
   }
 
   return (
-    <Container maxWidth="lg" sx={{ paddingTop: "2rem", paddingBottom: "4rem" }}>
+    <Container
+      maxWidth="lg"
+      sx={{
+        paddingTop: isMobile ? "1rem" : "2rem",
+        paddingBottom: isMobile ? "2rem" : "4rem",
+        px: isMobile ? 1 : 2,
+      }}
+    >
+      {showMockBanner && (
+        <Alert
+          severity="info"
+          sx={{ marginBottom: "1rem" }}
+          action={
+            <Button color="inherit" size="small" onClick={toggleMockData}>
+              {useMockData ? "목업 데이터 숨기기" : "목업 데이터 보기"}
+            </Button>
+          }
+        >
+          현재 목업 데이터를 사용하고 있습니다. 실제 API 연결이 되지 않았습니다.
+        </Alert>
+      )}
+
       <Paper
         sx={{
-          padding: "2rem",
-          marginBottom: "2rem",
+          padding: isMobile ? "1rem" : "2rem",
+          marginBottom: isMobile ? "1rem" : "2rem",
           backgroundColor: "#FFFFFF",
           borderRadius: "8px",
           boxShadow: "0 4px 12px rgba(0, 0, 0, 0.05)",
@@ -131,7 +238,7 @@ const AdminPage = () => {
         }}
       >
         <Typography
-          variant="h4"
+          variant={isMobile ? "h5" : "h4"}
           sx={{ fontWeight: 800, color: "#000000", marginBottom: "0.5rem" }}
         >
           관리자 페이지
@@ -155,10 +262,13 @@ const AdminPage = () => {
             value={tabValue}
             onChange={handleTabChange}
             aria-label="관리자 탭"
+            variant={isMobile ? "fullWidth" : "standard"}
             sx={{
               "& .MuiTab-root": {
                 fontWeight: 600,
                 color: "#555555",
+                fontSize: isMobile ? "0.875rem" : "1rem",
+                padding: isMobile ? "0.5rem" : "1rem",
                 "&.Mui-selected": {
                   color: "#000000",
                 },
@@ -174,11 +284,19 @@ const AdminPage = () => {
         </Box>
 
         <TabPanel value={tabValue} index={0}>
-          <UserApprovalPanel />
+          {useMockData ? (
+            <UserApprovalPanel mockUsers={MOCK_USERS} useMockData={true} />
+          ) : (
+            <UserApprovalPanel />
+          )}
         </TabPanel>
 
         <TabPanel value={tabValue} index={1}>
-          <UserManagementPanel />
+          {useMockData ? (
+            <UserManagementPanel mockUsers={MOCK_USERS} useMockData={true} />
+          ) : (
+            <UserManagementPanel />
+          )}
         </TabPanel>
       </Paper>
     </Container>
