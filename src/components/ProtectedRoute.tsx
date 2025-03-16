@@ -1,7 +1,6 @@
 import { Navigate } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { isAuthenticated } from "../utils/authService";
-import axios from "axios";
+import { isAuthenticated, isAdmin } from "../utils/authService";
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
@@ -13,30 +12,18 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   adminOnly = false,
 }) => {
   const [isAuth, setIsAuth] = useState<boolean>(false);
-  const [isAdmin, setIsAdmin] = useState<boolean>(false);
+  const [isAdminUser, setIsAdminUser] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
     // authService를 사용하여 인증 상태 확인
-    const checkAuth = async () => {
+    const checkAuth = () => {
       const authenticated = isAuthenticated();
       setIsAuth(authenticated);
 
       if (authenticated && adminOnly) {
-        try {
-          // 관리자 권한 확인
-          const token = localStorage.getItem("token");
-          const response = await axios.get("/api/check-admin", {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          });
-
-          setIsAdmin(response.data.isAdmin);
-        } catch (error) {
-          console.error("관리자 권한 확인 중 오류 발생:", error);
-          setIsAdmin(false);
-        }
+        // 관리자 권한 확인 (로컬 스토리지에 저장된 정보 사용)
+        setIsAdminUser(isAdmin());
       }
 
       setIsLoading(false);
@@ -55,7 +42,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
     return <Navigate to="/login" replace />;
   }
 
-  if (adminOnly && !isAdmin) {
+  if (adminOnly && !isAdminUser) {
     // 관리자 권한이 필요하지만 관리자가 아닌 경우 홈으로 리다이렉트
     return <Navigate to="/" replace />;
   }

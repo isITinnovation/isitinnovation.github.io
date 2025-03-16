@@ -30,6 +30,7 @@ export interface User {
   id: string;
   name: string;
   email: string;
+  role?: string;
 }
 
 export interface AuthResponse {
@@ -54,8 +55,9 @@ export const registerUser = async (
 ): Promise<AuthResponse> => {
   try {
     const timestamp = new Date().getTime();
-    const response = await axios.post("/api/register", {
+    const response = await axios.post("/api/user-management", {
       ...data,
+      action: "register",
       timestamp,
     });
     return response.data;
@@ -78,8 +80,9 @@ export const registerUser = async (
 export const loginUser = async (data: LoginData): Promise<AuthResponse> => {
   try {
     const timestamp = new Date().getTime();
-    const response = await axios.post("/api/login", {
+    const response = await axios.post("/api/user-management", {
       ...data,
+      action: "login",
       timestamp,
     });
 
@@ -122,9 +125,10 @@ export const changePassword = async (
 
     const timestamp = new Date().getTime();
     const response = await axios.post(
-      "/api/change-password",
+      "/api/user-management",
       {
         ...data,
+        action: "change-password",
         timestamp,
       },
       {
@@ -156,8 +160,8 @@ export const logoutUser = async (): Promise<AuthResponse> => {
 
     // 서버에 로그아웃 요청
     const response = await axios.post(
-      "/api/logout",
-      { timestamp: new Date().getTime() },
+      "/api/user-management",
+      { action: "logout", timestamp: new Date().getTime() },
       {
         headers: token ? { Authorization: `Bearer ${token}` } : {},
       }
@@ -215,6 +219,15 @@ export const isAuthenticated = (): boolean => {
 };
 
 /**
+ * 현재 사용자가 관리자인지 확인
+ * @returns 관리자 여부
+ */
+export const isAdmin = (): boolean => {
+  const user = getCurrentUser();
+  return !!user && user.role === "admin";
+};
+
+/**
  * 프로필 업데이트 API 호출
  * @param data 프로필 업데이트 데이터
  * @returns API 응답
@@ -233,9 +246,10 @@ export const updateProfile = async (
 
     const timestamp = new Date().getTime();
     const response = await axios.post(
-      "/api/update-profile",
+      "/api/user-management",
       {
         ...data,
+        action: "update-profile",
         timestamp,
       },
       {

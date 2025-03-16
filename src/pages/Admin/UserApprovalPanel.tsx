@@ -43,7 +43,7 @@ const UserApprovalPanel = () => {
 
     try {
       const timestamp = new Date().getTime();
-      const response = await axios.get("/api/users", {
+      const response = await axios.get("/api/user-management", {
         params: { timestamp },
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -70,10 +70,11 @@ const UserApprovalPanel = () => {
     try {
       const timestamp = new Date().getTime();
       const response = await axios.post(
-        "/api/approve-user",
+        "/api/user-management",
         {
           userId,
-          approve,
+          action: "approve",
+          approved: approve,
           timestamp,
         },
         {

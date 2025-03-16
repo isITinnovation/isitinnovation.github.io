@@ -3,8 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import { ROUTES } from "../constants/routes";
 import "../styles/Sidebar.css";
 import { useMediaQuery, useTheme } from "@mui/material";
-import axios from "axios";
-import { isAuthenticated } from "../utils/authService";
+import { isAuthenticated, isAdmin } from "../utils/authService";
 
 interface SidebarProps {
   isOpen: boolean;
@@ -15,26 +14,15 @@ const Sidebar = ({ isOpen, setIsOpen }: SidebarProps) => {
   const location = useLocation();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
-  const [isAdmin, setIsAdmin] = useState<boolean>(false);
+  const [isAdminUser, setIsAdminUser] = useState<boolean>(false);
 
   // 관리자 권한 확인
   useEffect(() => {
-    const checkAdminStatus = async () => {
+    const checkAdminStatus = () => {
       if (!isAuthenticated()) return;
 
-      try {
-        const token = localStorage.getItem("token");
-        const response = await axios.get("/api/check-admin", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
-        setIsAdmin(response.data.isAdmin);
-      } catch (error) {
-        console.error("관리자 권한 확인 중 오류 발생:", error);
-        setIsAdmin(false);
-      }
+      // 로컬 스토리지에 저장된 정보를 사용하여 관리자 여부 확인
+      setIsAdminUser(isAdmin());
     };
 
     checkAdminStatus();
@@ -71,7 +59,7 @@ const Sidebar = ({ isOpen, setIsOpen }: SidebarProps) => {
           <ul className="sidebar-menu">
             {ROUTES.map((route) => {
               // 관리자 전용 메뉴는 관리자만 볼 수 있음
-              if (route.adminOnly && !isAdmin) {
+              if (route.adminOnly && !isAdminUser) {
                 return null;
               }
 

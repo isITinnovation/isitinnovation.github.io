@@ -1,5 +1,4 @@
-import { isAuthenticated } from "../utils/authService";
-import axios from "axios";
+import { isAuthenticated, isAdmin } from "../utils/authService";
 
 interface Route {
   name: string;
@@ -9,22 +8,9 @@ interface Route {
 }
 
 // 관리자 여부 확인 함수
-export const checkIsAdmin = async (): Promise<boolean> => {
+export const checkIsAdmin = (): boolean => {
   if (!isAuthenticated()) return false;
-
-  try {
-    const token = localStorage.getItem("token");
-    const response = await axios.get("/api/check-admin", {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-
-    return response.data.isAdmin;
-  } catch (error) {
-    console.error("관리자 권한 확인 중 오류 발생:", error);
-    return false;
-  }
+  return isAdmin();
 };
 
 export const ROUTES: Route[] = [

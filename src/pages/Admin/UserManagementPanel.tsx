@@ -62,7 +62,7 @@ const UserManagementPanel = () => {
 
     try {
       const timestamp = new Date().getTime();
-      const response = await axios.get("/api/users", {
+      const response = await axios.get("/api/user-management", {
         params: { timestamp },
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -91,7 +91,7 @@ const UserManagementPanel = () => {
     try {
       const timestamp = new Date().getTime();
       const response = await axios.put(
-        "/api/update-user",
+        "/api/user-management",
         {
           userId: selectedUser.id,
           name: editedUser.name,
@@ -143,15 +143,19 @@ const UserManagementPanel = () => {
 
     try {
       const timestamp = new Date().getTime();
-      const response = await axios.delete("/api/delete-user", {
-        data: {
+      const response = await axios.post(
+        "/api/user-management",
+        {
           userId: selectedUser.id,
+          action: "delete",
           timestamp,
         },
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      });
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
 
       if (response.data.success) {
         // 사용자 목록에서 삭제
