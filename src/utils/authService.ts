@@ -1,5 +1,15 @@
 import axios from "axios";
 
+// 개발 환경에서 API 요청을 위한 기본 설정
+// 개발 환경에서는 Vite의 프록시 기능을 사용하기 위해 baseURL 설정
+if (process.env.NODE_ENV === "development") {
+  axios.defaults.baseURL = "http://localhost:3000";
+  console.log(
+    "개발 환경에서 API 요청을 위한 baseURL이 설정되었습니다:",
+    axios.defaults.baseURL
+  );
+}
+
 export interface RegisterData {
   name: string;
   email: string;

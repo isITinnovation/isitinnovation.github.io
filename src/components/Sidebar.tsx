@@ -1,8 +1,10 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { ROUTES } from "../constants/routes";
 import "../styles/Sidebar.css";
 import { useMediaQuery, useTheme } from "@mui/material";
+import axios from "axios";
+import { isAuthenticated } from "../utils/authService";
 
 interface SidebarProps {
   isOpen: boolean;
@@ -13,6 +15,30 @@ const Sidebar = ({ isOpen, setIsOpen }: SidebarProps) => {
   const location = useLocation();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+  const [isAdmin, setIsAdmin] = useState<boolean>(false);
+
+  // 관리자 권한 확인
+  useEffect(() => {
+    const checkAdminStatus = async () => {
+      if (!isAuthenticated()) return;
+
+      try {
+        const token = localStorage.getItem("token");
+        const response = await axios.get("/api/check-admin", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        setIsAdmin(response.data.isAdmin);
+      } catch (error) {
+        console.error("관리자 권한 확인 중 오류 발생:", error);
+        setIsAdmin(false);
+      }
+    };
+
+    checkAdminStatus();
+  }, []);
 
   // 모바일에서 사이드바 열린 상태로 스크롤 방지
   useEffect(() => {
@@ -43,22 +69,29 @@ const Sidebar = ({ isOpen, setIsOpen }: SidebarProps) => {
             </h1>
           </div>
           <ul className="sidebar-menu">
-            {ROUTES.map((route) => (
-              <li key={route.path}>
-                <Link
-                  to={route.path}
-                  className={`sidebar-link ${
-                    location.pathname === route.path ? "active" : ""
-                  }`}
-                  onClick={handleMenuClick}
-                >
-                  {route.icon && (
-                    <span className="sidebar-icon">{route.icon}</span>
-                  )}
-                  <span className="sidebar-text">{route.name}</span>
-                </Link>
-              </li>
-            ))}
+            {ROUTES.map((route) => {
+              // 관리자 전용 메뉴는 관리자만 볼 수 있음
+              if (route.adminOnly && !isAdmin) {
+                return null;
+              }
+
+              return (
+                <li key={route.path}>
+                  <Link
+                    to={route.path}
+                    className={`sidebar-link ${
+                      location.pathname === route.path ? "active" : ""
+                    }`}
+                    onClick={handleMenuClick}
+                  >
+                    {route.icon && (
+                      <span className="sidebar-icon">{route.icon}</span>
+                    )}
+                    <span className="sidebar-text">{route.name}</span>
+                  </Link>
+                </li>
+              );
+            })}
           </ul>
         </div>
       </nav>

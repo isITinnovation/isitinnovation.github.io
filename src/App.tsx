@@ -13,6 +13,7 @@ import Login from "./pages/Login/index";
 import Register from "./pages/Register/index";
 import Profile from "./pages/Profile/index";
 import About from "./pages/About/index";
+import AdminPage from "./pages/Admin/index";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { theme } from "./styles/theme";
 
@@ -99,6 +100,14 @@ const App = () => {
                   element={
                     <ProtectedRoute>
                       <Profile />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/admin"
+                  element={
+                    <ProtectedRoute adminOnly={true}>
+                      <AdminPage />
                     </ProtectedRoute>
                   }
                 />

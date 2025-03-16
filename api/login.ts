@@ -57,6 +57,7 @@ export default async function handler(
               name VARCHAR(100) NOT NULL,
               email VARCHAR(100) NOT NULL UNIQUE,
               password VARCHAR(255) NOT NULL,
+              approvedYN CHAR(1) DEFAULT 'N',
               created_at DATETIME NOT NULL,
               updated_at DATETIME NOT NULL,
               INDEX idx_email (email)
@@ -64,6 +65,21 @@ export default async function handler(
           `);
 
           console.log("users 테이블이 성공적으로 생성되었습니다.");
+        } else {
+          // 테이블이 존재하지만 approvedYN 컬럼이 없는 경우 추가
+          try {
+            const [columns] = await connection.query(
+              "SHOW COLUMNS FROM users LIKE 'approvedYN'"
+            );
+            if ((columns as any[]).length === 0) {
+              await connection.query(
+                "ALTER TABLE users ADD COLUMN approvedYN CHAR(1) DEFAULT 'N' AFTER password"
+              );
+              console.log("approvedYN 컬럼이 성공적으로 추가되었습니다.");
+            }
+          } catch (columnError) {
+            console.error("컬럼 확인/추가 중 오류 발생:", columnError);
+          }
         }
       } catch (tableError) {
         console.error("테이블 확인/생성 중 오류 발생:", tableError);
@@ -97,6 +113,15 @@ export default async function handler(
         });
       }
 
+      // 승인 여부 확인
+      if (user.approvedYN !== "Y") {
+        return response.status(403).json({
+          success: false,
+          message:
+            "아직 승인되지 않은 계정입니다. 관리자 승인 후 로그인이 가능합니다.",
+        });
+      }
+
       // JWT 토큰 생성
       const token = jwt.sign(
         {
@@ -117,6 +142,7 @@ export default async function handler(
           id: user.id,
           name: user.name,
           email: user.email,
+          approved: user.approvedYN === "Y",
         },
       });
     } finally {

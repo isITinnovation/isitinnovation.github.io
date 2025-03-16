@@ -113,7 +113,7 @@ export default async function handler(
 
       // 사용자 생성
       await connection.query(
-        "INSERT INTO users (id, name, email, password, created_at, updated_at) VALUES (?, ?, ?, ?, NOW(), NOW())",
+        "INSERT INTO users (id, name, email, password, created_at, updated_at, approvedYN) VALUES (?, ?, ?, ?, NOW(), NOW(), 'N')",
         [userId, name, email, hashedPassword]
       );
 

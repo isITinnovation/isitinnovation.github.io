@@ -28,6 +28,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import LoginIcon from "@mui/icons-material/Login";
 import LogoutIcon from "@mui/icons-material/Logout";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 import Logo from "./Logo";
 import React from "react";
 import {
@@ -319,6 +320,20 @@ const Header = ({
                     />
                     프로필
                   </MenuItem>
+                  {user?.approved && (
+                    <MenuItem
+                      onClick={() => {
+                        handleMenuClose();
+                        navigate("/admin");
+                      }}
+                    >
+                      <AdminPanelSettingsIcon
+                        fontSize="small"
+                        sx={{ mr: 1, color: "#000000" }}
+                      />
+                      관리자 페이지
+                    </MenuItem>
+                  )}
                   <MenuItem onClick={handleLogout}>
                     <LogoutIcon
                       fontSize="small"

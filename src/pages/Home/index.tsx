@@ -75,18 +75,54 @@ const Home = ({ searchValue }: HomeProps) => {
       try {
         // 서버리스 API에서 블로그 포스트 가져오기
         try {
+          // API 요청 시도
           const response = await axios.get<{
             success: boolean;
             posts: BlogPost[];
           }>("/api/getBlogPosts");
+
           if (response.data.success) {
             setBlogPosts(response.data.posts);
+          } else {
+            // API 응답이 성공이 아닌 경우 에러 처리
+            console.log("API 응답이 성공이 아닙니다:", response.data);
+            // 개발 환경에서는 임시 데이터 사용
+            if (process.env.NODE_ENV === "development") {
+              console.log("개발 환경에서 임시 데이터를 사용합니다.");
+              setBlogPosts([
+                {
+                  id: "temp-1",
+                  title: "임시 블로그 포스트",
+                  content: "이것은 개발 환경에서 사용되는 임시 콘텐츠입니다.",
+                  tags: ["개발", "임시"],
+                  category: "개발",
+                  createdAt: new Date().toISOString(),
+                  updatedAt: new Date().toISOString(),
+                },
+              ]);
+            }
           }
         } catch (apiError) {
           console.log(
-            "서버리스 API에서 포스트를 가져오지 못했습니다. 기존 서비스 사용:",
+            "서버리스 API에서 포스트를 가져오지 못했습니다:",
             apiError
           );
+
+          // 개발 환경에서는 임시 데이터 사용
+          if (process.env.NODE_ENV === "development") {
+            console.log("개발 환경에서 임시 데이터를 사용합니다.");
+            setBlogPosts([
+              {
+                id: "temp-1",
+                title: "임시 블로그 포스트",
+                content: "이것은 개발 환경에서 사용되는 임시 콘텐츠입니다.",
+                tags: ["개발", "임시"],
+                category: "개발",
+                createdAt: new Date().toISOString(),
+                updatedAt: new Date().toISOString(),
+              },
+            ]);
+          }
         }
 
         // 기존 서비스에서 트렌딩 포스트 가져오기
