@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import {
   AppBar,
   Toolbar,
@@ -62,6 +62,7 @@ const Header = ({
   setSearchValue,
 }: HeaderProps) => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [isAuth, setIsAuth] = useState<boolean>(false);
   const [user, setUser] = useState<any>(null);
   const isMobile = useMediaQuery((theme: Theme) =>
@@ -75,7 +76,7 @@ const Header = ({
   useEffect(() => {
     setIsAuth(isAuthenticated());
     setUser(getCurrentUser());
-  }, []);
+  }, [location.pathname]);
 
   const handleSearchOpen = () => {
     setSearchDialogOpen(true);
