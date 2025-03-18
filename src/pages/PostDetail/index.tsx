@@ -7,188 +7,72 @@ import {
   Chip,
   IconButton,
   Paper,
-  Skeleton,
   Alert,
 } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { PostDetail } from "../../types/post";
 import { postService } from "../../services/postService";
-import axios from "axios";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
-import rehypeRaw from "rehype-raw";
 import "./PostDetail.css";
-
-// 블로그 포스트 타입 정의
-interface BlogPost {
-  id: string;
-  title: string;
-  content: string;
-  tags: string[];
-  category: string;
-  createdAt: string;
-  updatedAt: string;
-}
+import LoadingSkeleton from "../../components/LoadingSkeleton";
 
 const PostDetailPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [post, setPost] = useState<PostDetail | null>(null);
-  const [blogPost, setBlogPost] = useState<BlogPost | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [loadingTitle, setLoadingTitle] = useState<string | undefined>();
 
   useEffect(() => {
+    // URL에서 title 파라미터 확인
+    const params = new URLSearchParams(window.location.search);
+    const titleFromUrl = params.get("title");
+    if (titleFromUrl) {
+      setLoadingTitle(decodeURIComponent(titleFromUrl));
+    }
+
     const fetchPost = async () => {
-      setIsLoading(true);
-      setError(null);
-
       try {
-        if (!id) return;
-
-        // 먼저 서버리스 API에서 포스트 가져오기 시도
-        try {
-          const response = await axios.get<{
-            success: boolean;
-            post: BlogPost;
-          }>(`/api/getBlogPost?id=${id}`);
-          if (response.data.success && response.data.post) {
-            setBlogPost(response.data.post);
-            return;
-          }
-        } catch (apiError) {
-          console.log(
-            "서버리스 API에서 포스트를 가져오지 못했습니다. 기존 서비스 사용:",
-            apiError
-          );
-        }
-
-        // 서버리스 API에서 가져오지 못한 경우 기존 서비스 사용
-        const postData = await postService.getPostById(Number(id));
-        if (postData) {
-          setPost(postData);
-        } else {
-          navigate("/not-found");
-        }
-      } catch (error) {
-        console.error("Error fetching post:", error);
-        setError("포스트를 불러오는 중 오류가 발생했습니다.");
+        setIsLoading(true);
+        const response = await postService.getPostById(Number(id));
+        setPost(response || null);
+      } catch (err) {
+        setError("포스트를 불러오는데 실패했습니다.");
+        console.error("Error fetching post:", err);
       } finally {
         setIsLoading(false);
       }
     };
 
-    fetchPost();
-  }, [id, navigate]);
+    if (id) {
+      fetchPost();
+    }
+  }, [id]);
 
   if (isLoading) {
-    return (
-      <Container maxWidth="md" className="post-detail-container">
-        <Skeleton variant="rectangular" height={400} />
-      </Container>
-    );
+    return <LoadingSkeleton title={loadingTitle} />;
   }
 
   if (error) {
     return (
-      <Container maxWidth="md" className="post-detail-container">
+      <Container>
         <Alert severity="error">{error}</Alert>
-        <Box sx={{ mt: 2 }}>
-          <IconButton onClick={() => navigate(-1)}>
-            <ArrowBackIcon />
-          </IconButton>
-        </Box>
       </Container>
     );
   }
 
-  // 서버리스 API에서 가져온 블로그 포스트 렌더링
-  if (blogPost) {
+  if (!post) {
     return (
-      <Container
-        maxWidth="md"
-        className="post-detail-container"
-        sx={{ py: { xs: 2, md: 4 }, mt: { xs: -2, md: -4 } }}
-      >
-        <Box className="post-detail-box">
-          <Paper className="post-detail-paper">
-            <Box className="post-detail-header">
-              <IconButton
-                onClick={() => navigate(-1)}
-                className="post-detail-back-button"
-              >
-                <ArrowBackIcon />
-              </IconButton>
-
-              <Box
-                className="post-detail-categories"
-                sx={{
-                  display: "flex",
-                  flexDirection: "row",
-                  flexWrap: "wrap",
-                  width: "100%",
-                }}
-              >
-                <Chip
-                  label={blogPost.category}
-                  size="small"
-                  className="post-detail-category"
-                  sx={{ margin: "0 0.5rem 0.5rem 0", display: "inline-flex" }}
-                />
-              </Box>
-              <Typography variant="h4" className="post-detail-title">
-                {blogPost.title}
-              </Typography>
-
-              <Box className="post-detail-meta">
-                <p className="post-detail-createdAt">
-                  작성일:{" "}
-                  {new Date(blogPost.createdAt).toLocaleDateString("ko-KR")}
-                </p>
-                <p className="post-detail-updatedAt">
-                  수정일:{" "}
-                  {new Date(blogPost.updatedAt).toLocaleDateString("ko-KR")}
-                </p>
-              </Box>
-
-              <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1, mt: 2 }}>
-                {blogPost.tags.map((tag, index) => (
-                  <Chip
-                    key={index}
-                    label={tag}
-                    size="small"
-                    color="primary"
-                    variant="outlined"
-                  />
-                ))}
-              </Box>
-            </Box>
-
-            <Box className="post-detail-content">
-              <ReactMarkdown
-                remarkPlugins={[remarkGfm]}
-                rehypePlugins={[rehypeRaw]}
-              >
-                {blogPost.content}
-              </ReactMarkdown>
-            </Box>
-          </Paper>
-        </Box>
+      <Container>
+        <Alert severity="warning">포스트를 찾을 수 없습니다.</Alert>
       </Container>
     );
   }
-
-  // 기존 포스트 렌더링
-  if (!post) return null;
 
   return (
-    <Container
-      maxWidth="md"
-      className="post-detail-container"
-      sx={{ py: { xs: 2, md: 4 }, mt: { xs: -2, md: -4 } }}
-    >
-      <Box className="post-detail-box">
-        <Paper className="post-detail-paper">
+    <Container maxWidth="md">
+      <Box sx={{ py: 4 }}>
+        <Paper elevation={3} sx={{ p: 4 }}>
           <Box className="post-detail-header">
             <IconButton
               onClick={() => navigate(-1)}

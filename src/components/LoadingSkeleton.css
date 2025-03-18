@@ -1,0 +1,56 @@
+@keyframes run {
+  0% {
+    left: -50px;
+  }
+  100% {
+    left: calc(100% + 50px);
+  }
+}
+
+@keyframes run2 {
+  0% {
+    right: -50px;
+  }
+  100% {
+    right: calc(100% + 50px);
+  }
+}
+
+.running-dog {
+  position: absolute;
+  top: 130px;
+  left: -50px;
+  width: 60px;
+  height: 60px;
+  animation: run 10s linear infinite;
+  z-index: 1;
+}
+
+.running-dog2 {
+  position: fixed;
+  bottom: 420px;
+  right: 0px;
+  width: 120px;
+  height: 120px;
+  z-index: 1;
+}
+
+.running-dog::after {
+  content: "";
+  position: absolute;
+  bottom: -5px;
+  left: 50%;
+  width: 20px;
+  height: 4px;
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 50%;
+  transform: translateX(-50%);
+  animation: shadow 8s linear infinite;
+}
+
+@keyframes shadow {
+  0%, 100% {
+    transform: translateX(-50%) scale(1);
+    opacity: 0.3;
+  }
+}

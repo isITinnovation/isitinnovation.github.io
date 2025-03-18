@@ -1,5 +1,6 @@
 import { defineConfig, loadEnv } from "vite";
 import react from "@vitejs/plugin-react";
+import path from "path";
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
@@ -9,6 +10,12 @@ export default defineConfig(({ mode }) => {
   return {
     plugins: [react()],
     base: "/",
+    resolve: {
+      alias: {
+        "@": path.resolve(__dirname, "./src"),
+        "@assets": path.resolve(__dirname, "./src/assets"),
+      },
+    },
     server: {
       port: 3000,
       open: true, // 모든 네트워크 인터페이스에서 접근 허용

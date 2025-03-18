@@ -8,7 +8,6 @@ import {
   Chip,
   Button,
   Alert,
-  CircularProgress,
 } from "@mui/material";
 import TrendingUpIcon from "@mui/icons-material/TrendingUp";
 // import VisibilityIcon from "@mui/icons-material/Visibility";
@@ -19,6 +18,7 @@ import { Post } from "../../types/post";
 import { postService } from "../../services/postService";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import LoadingSkeleton from "../../components/LoadingSkeleton";
 
 interface HomeProps {
   searchValue: string;
@@ -187,18 +187,7 @@ const Home = ({ searchValue }: HomeProps) => {
     .sort((a, b) => b.count - a.count); // 카운트 기준 내림차순 정렬
 
   if (isLoading) {
-    return (
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          height: "50vh",
-        }}
-      >
-        <CircularProgress />
-      </Box>
-    );
+    return <LoadingSkeleton />;
   }
 
   if (error) {
@@ -267,7 +256,11 @@ const Home = ({ searchValue }: HomeProps) => {
             {filteredBlogPosts.map((post) => (
               <Card
                 key={post.id}
-                onClick={() => navigate(`/post/${post.id}`)}
+                onClick={() =>
+                  navigate(
+                    `/post/${post.id}?title=${encodeURIComponent(post.title)}`
+                  )
+                }
                 sx={{
                   borderRadius: 2,
                   transition: "transform 0.2s",
@@ -346,7 +339,11 @@ const Home = ({ searchValue }: HomeProps) => {
             {filteredPosts.map((topic) => (
               <Card
                 key={topic.id}
-                onClick={() => navigate(`/post/${topic.id}`)}
+                onClick={() =>
+                  navigate(
+                    `/post/${topic.id}?title=${encodeURIComponent(topic.title)}`
+                  )
+                }
                 sx={{
                   borderRadius: 2,
                   transition: "transform 0.2s",
