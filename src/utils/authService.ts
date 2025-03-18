@@ -90,8 +90,10 @@ export const loginUser = async (data: LoginData): Promise<AuthResponse> => {
 
     // 로컬 스토리지에 인증 정보 저장
     if (token && user) {
+      const expiresAt = new Date().getTime() + 3600000; // 현재 시간 + 1시간(3600000ms)
       localStorage.setItem("token", token);
       localStorage.setItem("user", JSON.stringify(user));
+      localStorage.setItem("expiresAt", expiresAt.toString());
     }
 
     return response.data;
@@ -274,4 +276,19 @@ export const updateProfile = async (
       message: "서버 연결에 실패했습니다. 네트워크 연결을 확인해주세요.",
     };
   }
+};
+
+export const isTokenExpired = (): boolean => {
+  const expiresAt = localStorage.getItem("expiresAt");
+  if (!expiresAt) return true;
+
+  const currentTime = new Date().getTime();
+  return currentTime > parseInt(expiresAt);
+};
+
+export const logout = () => {
+  localStorage.removeItem("token");
+  localStorage.removeItem("user");
+  localStorage.removeItem("expiresAt");
+  window.location.href = "/login";
 };

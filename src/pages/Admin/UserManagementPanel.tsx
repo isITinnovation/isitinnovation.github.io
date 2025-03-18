@@ -31,6 +31,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import axios from "axios";
+import { isTokenExpired, logout } from "../../utils/authService";
 
 interface User {
   id: string;
@@ -76,6 +77,15 @@ const UserManagementPanel: React.FC<UserManagementPanelProps> = ({
       return;
     }
 
+    // 토큰 만료 체크
+    if (isTokenExpired()) {
+      setError("로그인 시간이 만료되었습니다. 다시 로그인해주세요.");
+      setTimeout(() => {
+        logout();
+      }, 3000);
+      return;
+    }
+
     setLoading(true);
     setError(null);
 
@@ -97,7 +107,21 @@ const UserManagementPanel: React.FC<UserManagementPanelProps> = ({
         );
       }
     } catch (err: any) {
-      setError(err.response?.data?.message || "서버 오류가 발생했습니다.");
+      if (
+        err.response?.status === 401 ||
+        err.response?.data?.message?.includes("유효하지 않은 토큰")
+      ) {
+        // 알림 메시지 표시
+        setError("인증이 만료되어 로그아웃됩니다.");
+
+        // 3초 후 로그아웃 처리
+        setTimeout(() => {
+          localStorage.removeItem("token");
+          window.location.href = "/login"; // 또는 로그인 페이지로 리다이렉트
+        }, 3000);
+      } else {
+        setError(err.response?.data?.message || "서버 오류가 발생했습니다.");
+      }
     } finally {
       setLoading(false);
     }
