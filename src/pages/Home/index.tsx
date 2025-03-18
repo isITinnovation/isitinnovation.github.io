@@ -79,7 +79,11 @@ const Home = ({ searchValue }: HomeProps) => {
           const response = await axios.get<{
             success: boolean;
             posts: BlogPost[];
-          }>("/api/getBlogPosts");
+          }>("/api/getBlogPosts", {
+            headers: {
+              "Cache-Control": "max-age=21600", // 60초 동안 캐시 허용
+            },
+          });
 
           if (response.data.success) {
             setBlogPosts(response.data.posts);

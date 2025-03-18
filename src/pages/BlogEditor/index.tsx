@@ -153,6 +153,15 @@ const BlogEditor = () => {
       });
 
       if (response.data.success) {
+        // 캐시 무효화를 위한 요청
+        await axios.get("/api/getBlogPosts", {
+          headers: {
+            "Cache-Control": "no-cache",
+            Pragma: "no-cache",
+            Expires: "0",
+          },
+        });
+
         setSnackbar({
           open: true,
           message: "블로그 포스트가 성공적으로 저장되었습니다.",
