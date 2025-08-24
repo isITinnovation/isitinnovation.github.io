@@ -1,0 +1,73 @@
+/* Analysis 페이지 메인 스타일 */
+.analysis-container {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.analysis-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.analysis-title {
+  color: #2c3e50;
+  font-size: 2.5rem;
+  margin-bottom: 10px;
+  font-weight: 700;
+}
+
+.analysis-subtitle {
+  color: #7f8c8d;
+  font-size: 1.1rem;
+  margin-bottom: 5px;
+}
+
+.analysis-description {
+  color: #95a5a6;
+  font-size: 0.9rem;
+}
+
+/* 테스트 버튼 스타일 */
+.test-button-container {
+  text-align: center;
+  margin: 20px 0;
+}
+
+.test-button {
+  padding: 12px 24px;
+  background: linear-gradient(135deg, #28a745, #20c997);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+}
+
+.test-button:hover {
+  background: linear-gradient(135deg, #218838, #1ea085);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4);
+}
+
+.test-button:active {
+  transform: translateY(0);
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+  .analysis-container {
+    padding: 15px;
+  }
+  
+  .analysis-title {
+    font-size: 2rem;
+  }
+  
+  .analysis-subtitle {
+    font-size: 1rem;
+  }
+}

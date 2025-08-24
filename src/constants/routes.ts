@@ -31,6 +31,10 @@ export const ROUTES: Route[] = [
     path: "/about",
   },
   {
+    name: "분석",
+    path: "/analysis",
+  },
+  {
     name: "관리자",
     path: "/admin",
     adminOnly: true,
