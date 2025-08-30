@@ -54,7 +54,7 @@ const WeddingInvitation: React.FC<WeddingInvitationProps> = () => {
         {/* 가을 풍경 배경 이미지 */}
         <div className="autumn-background">
           <img
-            src="/src/static/image/autume.png"
+            src="/images/autume.png"
             alt="가을 풍경"
             className="autumn-image"
           />
