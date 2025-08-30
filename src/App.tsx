@@ -15,6 +15,7 @@ import Profile from "./pages/Profile/index";
 import About from "./pages/About/index";
 import Analysis from "./pages/Analysis/index";
 import AdminPage from "./pages/Admin/index";
+import WeddingInvitation from "./pages/WeddingInvitation/index";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { theme } from "./styles/theme";
 
@@ -39,6 +40,12 @@ const AppContent = () => {
 
   // 분석 페이지인지 확인
   const isAnalysisPage = location.pathname === "/analysis";
+
+  // 청첩장 페이지인지 확인
+  const isWeddingPage = location.pathname === "/wedding";
+
+  // 전체 화면 페이지인지 확인 (분석 페이지 또는 청첩장 페이지)
+  const isFullScreenPage = isAnalysisPage || isWeddingPage;
 
   // 화면 크기가 변경될 때 사이드바 상태 업데이트
   useEffect(() => {
@@ -74,12 +81,18 @@ const AppContent = () => {
   // 일반 페이지들은 기존 레이아웃 유지
   return (
     <>
-      <Header
-        isOpen={isOpen}
-        setIsOpen={setIsOpen}
-        searchValue={searchValue}
-        setSearchValue={setSearchValue}
-      />
+      {/* 사이드바 */}
+      {!isFullScreenPage && <Sidebar isOpen={isOpen} setIsOpen={setIsOpen} />}
+
+      {/* 헤더 */}
+      {!isFullScreenPage && (
+        <Header
+          isOpen={isOpen}
+          setIsOpen={setIsOpen}
+          searchValue={searchValue}
+          setSearchValue={setSearchValue}
+        />
+      )}
       <Box
         sx={{
           minHeight: "100vh",
@@ -88,11 +101,13 @@ const AppContent = () => {
           paddingTop: "40px", // Header 높이만큼 여백 추가
         }}
       >
-        <Sidebar isOpen={isOpen} setIsOpen={setIsOpen} />
         <Box
           sx={{
             flex: 1,
-            marginLeft: { xs: 0, md: isOpen ? "250px" : "0" },
+            marginLeft: {
+              xs: 0,
+              md: isOpen && !isFullScreenPage ? "250px" : "0",
+            },
             transition: "margin-left 0.3s ease",
             position: "relative",
             zIndex: 100,
@@ -101,8 +116,8 @@ const AppContent = () => {
           <Box
             component="main"
             sx={{
-              paddingX: "0.5rem",
-              height: "80vh",
+              paddingX: isFullScreenPage ? 0 : "0.5rem",
+              height: isFullScreenPage ? "100vh" : "80vh",
               overflowY: "auto",
               display: "flex",
               flexDirection: "column",
@@ -118,6 +133,7 @@ const AppContent = () => {
               <Route path="/stock-trend" element={<StockInfo />} />
               <Route path="/prompt-guide" element={<PromptGuide />} />
               <Route path="/about" element={<About />} />
+              <Route path="/wedding" element={<WeddingInvitation />} />
               <Route
                 path="/write"
                 element={

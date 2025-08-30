@@ -15,7 +15,7 @@ export const checkIsAdmin = (): boolean => {
 
 export const ROUTES: Route[] = [
   {
-    name: "실시간 인기 게시글12",
+    name: "실시간 인기 게시글",
     path: "/isITinnovation",
   },
   {
@@ -29,6 +29,10 @@ export const ROUTES: Route[] = [
   {
     name: "소개",
     path: "/about",
+  },
+  {
+    name: "청첩장",
+    path: "/wedding",
   },
   {
     name: "분석",
