@@ -1,6 +1,8 @@
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { Box, useMediaQuery, ThemeProvider } from "@mui/material";
 import { useState, useEffect } from "react";
+import AOS from "aos";
+import "aos/dist/aos.css";
 import Header from "./components/Header";
 import Sidebar from "./components/Sidebar";
 import Home from "./pages/Home/index";
@@ -52,7 +54,7 @@ const AppContent = () => {
     setIsOpen(!isMobile);
   }, [isMobile]);
 
-  // 분석 페이지인 경우 전체 화면으로 표시
+  // 분석 페이지 또는 청첩장 페이지인 경우 전체 화면으로 표시
   if (isAnalysisPage) {
     return (
       <Box
@@ -73,6 +75,36 @@ const AppContent = () => {
           }}
         >
           <Analysis />
+        </Box>
+      </Box>
+    );
+  }
+
+  // 청첩장 페이지인 경우 전체 화면으로 표시
+  if (isWeddingPage) {
+    return (
+      <Box
+        sx={{
+          minHeight: "100vh",
+          bgcolor: "background.default",
+          display: "flex",
+          flexDirection: "column",
+          padding: 0,
+          margin: 0,
+        }}
+      >
+        <Box
+          component="main"
+          sx={{
+            flex: 1,
+            overflowY: "auto",
+            display: "flex",
+            flexDirection: "column",
+            padding: 0,
+            margin: 0,
+          }}
+        >
+          <WeddingInvitation />
         </Box>
       </Box>
     );
@@ -173,6 +205,16 @@ const AppContent = () => {
 };
 
 const App = () => {
+  // AOS 초기화
+  useEffect(() => {
+    AOS.init({
+      duration: 1000,
+      easing: "ease-in-out",
+      once: true,
+      mirror: false,
+    });
+  }, []);
+
   return (
     <ThemeProvider theme={theme}>
       <BrowserRouter basename={getBasename()}>
