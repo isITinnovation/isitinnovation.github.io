@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   Container,
   Typography,
@@ -13,8 +13,8 @@ import {
   DialogContent,
   DialogActions,
 } from "@mui/material";
-import { LocationOn, Phone, Email, Share, Favorite } from "@mui/icons-material";
-import { useNavigate } from "react-router-dom";
+import { Phone, Email, Share, Favorite } from "@mui/icons-material";
+
 import "./WeddingInvitation.css";
 
 interface WeddingInvitationProps {
@@ -22,7 +22,6 @@ interface WeddingInvitationProps {
 }
 
 const WeddingInvitation: React.FC<WeddingInvitationProps> = () => {
-  const navigate = useNavigate();
   const [isContactDialogOpen, setIsContactDialogOpen] = useState(false);
 
   const handleShare = () => {
